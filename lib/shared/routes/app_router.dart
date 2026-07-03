@@ -7,6 +7,11 @@ import 'package:go_router/go_router.dart';
 import 'package:saabi_mobile/core/storage/hive/hive_keys.dart';
 import 'package:saabi_mobile/shared/components/pages/error_page.dart';
 import 'src/splash_route.dart';
+import 'src/main_route.dart';
+import 'src/credit_detail_route.dart';
+import 'src/settings_route.dart';
+import 'src/rounds_create_route.dart';
+import 'src/circle_detail_route.dart';
 
 export 'package:go_router/go_router.dart';
 
@@ -15,9 +20,19 @@ part 'routes.dart';
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final routes = [
-  // Splash and Onboarding
+  // Splash
   splashRoute.build(),
+  // Main screen
+  mainRoute.build(),
+  // Detail screens
+  creditDetailRoute.build(),
+  // Settings
+  settingsRoute.build(),
+  // Rounds
+  roundsCreateRoute.build(),
+  circleDetailRoute.build(),
 ];
+
 
 final appRouterProvider = Provider((ref) {
   // Always boot to splash; redirect logic there owns all navigation decisions

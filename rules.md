@@ -763,4 +763,5 @@ Before creating a new structural pattern in a feature, **check if any other feat
 ---
 
 > **Note to AI tooling:** Before generating any file or folder, verify the existing structure of the project and mirror established patterns. Only introduce new structural patterns when no existing precedent applies. All custom widgets defined in `lib/features` for later integration should be flagged for review with the developer before finalizing the blueprint.
+> **Crucial Rule for APIs/Widgets:** Always search and check the API signature/usages of a widget or function in the source code especially for foreign non-flutter before applying changes, unless you are 100% sure of the usage. This avoids round trips and compilation errors.
 Also, keep tracking in a cache_progress.md file in the project's root for changes you've made that might be beneficial to the next model. always make sure to update

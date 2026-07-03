@@ -8,12 +8,20 @@ enum Routes<In, Out> {
   splash,
 
   onboarding,
+  
+  // Main screen with PageView tabs
+  main,
+
+  // Feature detail screens
+  creditDetail,
+  settings,
+  roundsCreate,
+  circleDetail,
 
   // ============================================================================
   // MISC
   // ============================================================================
   emptyState,
-  // noNetworkPage,
   testScreen;
 
   String get path => name.withSlashPrefix;

@@ -1,6 +1,6 @@
-# Saabi Mobile Handoff Guide
+# Saabi Plus Handoff Guide
 
-This document is the working handoff for the Saabi Mobile project. A new model should read this first, then consult the linked project docs and memory notes before making changes.
+This document is the working handoff for the Saabi Plus project. A new model should read this first, then consult the linked project docs and memory notes before making changes.
 
 ## Primary References
 
@@ -12,12 +12,21 @@ This document is the working handoff for the Saabi Mobile project. A new model s
 
 ## Product Direction
 
-- This is Saabi Plus, an AI-driven financial operating system for informal traders.
-- The UI should stay simple and practical.
-- The baseline app shell should have a main screen with the Home tab plus two additional tabs.
-- The most likely primary tabs are Home, Wallet, and Chat.
-- Secondary modules such as Tracker, Ajo, Investment, and Credit should live behind cards, shortcuts, or secondary screens instead of becoming top-level clutter.
-- The previous `web_clone` structure exists in the repo, but it should be ignored for the new app direction unless a file is explicitly reused.
+- This is Saabi Plus, the identity and intelligence layer the informal economy is missing.
+- It turns cashflow data (via WhatsApp & Nomba) into credit, savings circles, and a verified marketplace.
+- The UI should stay simple, practical, and intuitive without tribal biases.
+- Nomba APIs (Virtual Accounts, Collections, Transfers) power the financial backend. 
+- There are no Gigs or Jobs in this version of the product.
+
+## App Structure (3 Tabs)
+
+The baseline app uses a `PageView` managed by a Riverpod Notifier (`MainPod`), NOT nested GoRouter `ShellRoute`.
+
+1. **Home**: Dashboard. Wallet balance, live Credit Score gauge, Quick Actions (Send, Receive, Transfer), and Recent Transactions.
+2. **Saabi**: The AI financial assistant. Natural-language interactions, transfers ("Send 5k to Adewale"), credit queries, expense tracking.
+3. **Rounds**: Group savings circles (Ajo/Esusu/Adashe). Users can create/join groups to build trust score and credit history.
+
+*Note: The Credit Score detail is a separate screen pushed from the Home tab, not a top-level tab.*
 
 ## UI System
 
@@ -39,7 +48,8 @@ This document is the working handoff for the Saabi Mobile project. A new model s
 ## Architecture Rules
 
 - Follow the folder and widget conventions in `rules.md`.
-- Keep widgets small and reusable.
+- Keep widgets small and reusable. Avoid duplicate UI elements.
+- State-driven tab switching uses Riverpod `MainPod`, tracking `tabIndex`.
 - Split a widget into private helpers when that improves clarity, but avoid unnecessary fragmentation.
 - Prefer deterministic placement of screens, logic, and reusable UI.
 - Use the modular feature layout when adding new product areas.
@@ -48,13 +58,13 @@ This document is the working handoff for the Saabi Mobile project. A new model s
 
 ## Current App Shape
 
-- The current app entrypoint is still in `lib/main.dart`.
-- The current shell is in `lib/dev/web_clone/app.dart`, but this is legacy scaffolding and should not be the target architecture for the new app.
-- The immediate next app-level implementation target is a ForUI-based root shell with 3 tabs.
-- The existing placeholder app files are currently:
+- The current app entrypoint is `lib/main.dart` which launches `App`.
+- ForUI root structure uses `MaterialApp.router` + `FTheme`. 
+- The existing core app files are:
   - [lib/app.dart](lib/app.dart)
   - [lib/main.dart](lib/main.dart)
   - [lib/features/splash.dart](lib/features/splash.dart)
+  - [lib/features/main/ui/screens/main_shell_view.dart](lib/features/main/ui/screens/main_shell_view.dart) (PageView & Bottom Nav)
 
 ## Initial File Map
 
@@ -66,7 +76,7 @@ Use [PROJECT_INIT.md](PROJECT_INIT.md) for the full file inventory. The importan
 - Shared routing.
 - Shared theme and semantic colors.
 - Core helpers for assets, constants, Hive, storage paths, and UI utilities.
-- Legacy `lib/dev/web_clone` files that were copied in from another project.
+- Legacy `lib/dev/web_clone` files should be ignored.
 
 ## Working Rules For Future Changes
 
@@ -76,7 +86,7 @@ Use [PROJECT_INIT.md](PROJECT_INIT.md) for the full file inventory. The importan
 4. Keep custom wrappers only when they still make sense for compatibility or redundancy.
 5. Replace any stale `AppColors` references with the local semantic palette in `lib/shared/theme/src/app_colors.dart`.
 6. Keep the app simple; avoid over-building navigation or nested dashboards.
-7. If a file is touched, make sure it still matches the current app direction and does not assume the old web-clone structure.
+7. Avoid duplicate elements (e.g. Wallet vs Home). Integrate logically.
 
 ## Validation Workflow
 
@@ -92,21 +102,11 @@ Use [PROJECT_INIT.md](PROJECT_INIT.md) for the full file inventory. The importan
 - If new initial files are added, update [PROJECT_INIT.md](PROJECT_INIT.md).
 - If theme tokens change, update both the guide and [lib/shared/theme/src/app_colors.dart](lib/shared/theme/src/app_colors.dart) notes.
 
-## Practical Build Order
-
-1. ForUI app shell.
-2. Theme and token alignment.
-3. 3-tab navigation shell.
-4. Home screen.
-5. Wallet screen.
-6. Chat screen.
-7. Auth flow.
-8. Secondary modules: Tracker, Ajo, Investment, Credit.
-
 ## Notes For The Next Model
 
-- Read this file, `rules.md`, and `PROJECT_INIT.md` before editing anything.
+- Read this file, `rules.md`, `cache_progress.md` and `PROJECT_INIT.md` before editing anything.
 - Check the repo memory note for persisted context.
 - Follow Flutter skill guidance when the task concerns Flutter widgets, layout, testing, or theming.
+- Tab management is State-driven, not Route-driven.
 - Keep the UI simple and practical.
 - Keep documentation current as you go.
