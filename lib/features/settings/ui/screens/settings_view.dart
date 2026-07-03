@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:forui/forui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:saabi_mobile/shared/theme/logic/theme_pod.dart';
-import 'package:saabi_mobile/shared/theme/src/app_colors.dart';
 
 class SettingsView extends ConsumerWidget {
   const SettingsView({super.key});
@@ -37,7 +36,7 @@ class SettingsView extends ConsumerWidget {
             context,
             icon: Icons.notifications_rounded,
             title: 'Notifications',
-            trailing: const Icon(Icons.chevron_right_rounded, color: AppColors.neutralBlack400),
+            trailing: Icon(Icons.chevron_right_rounded, color: context.theme.colors.mutedForeground),
           ),
           const SizedBox(height: 24),
           _buildSectionHeader(context, 'Account'),
@@ -45,14 +44,14 @@ class SettingsView extends ConsumerWidget {
             context,
             icon: Icons.person_rounded,
             title: 'Profile Information',
-            trailing: const Icon(Icons.chevron_right_rounded, color: AppColors.neutralBlack400),
+            trailing: Icon(Icons.chevron_right_rounded, color: context.theme.colors.mutedForeground),
           ),
           const SizedBox(height: 12),
           _buildTile(
             context,
             icon: Icons.security_rounded,
             title: 'Security & PIN',
-            trailing: const Icon(Icons.chevron_right_rounded, color: AppColors.neutralBlack400),
+            trailing: Icon(Icons.chevron_right_rounded, color: context.theme.colors.mutedForeground),
           ),
           const SizedBox(height: 24),
           _buildSectionHeader(context, 'Support'),
@@ -60,7 +59,7 @@ class SettingsView extends ConsumerWidget {
             context,
             icon: Icons.help_outline_rounded,
             title: 'Help Center',
-            trailing: const Icon(Icons.chevron_right_rounded, color: AppColors.neutralBlack400),
+            trailing: Icon(Icons.chevron_right_rounded, color: context.theme.colors.mutedForeground),
           ),
         ],
       ),
@@ -73,7 +72,7 @@ class SettingsView extends ConsumerWidget {
       child: Text(
         title,
         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: Theme.of(context).colorScheme.primary,
+              color: context.theme.colors.primary,
               fontWeight: FontWeight.w600,
             ),
       ),
@@ -89,18 +88,20 @@ class SettingsView extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: context.theme.colors.card,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.neutralBlack100),
+        border: Border.all(color: context.theme.colors.border),
       ),
       child: Row(
         children: [
-          Icon(icon, color: AppColors.neutralBlack400, size: 22),
+          Icon(icon, color: context.theme.colors.mutedForeground, size: 22),
           const SizedBox(width: 16),
           Expanded(
             child: Text(
               title,
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: context.theme.colors.foreground,
+                  ),
             ),
           ),
           trailing,

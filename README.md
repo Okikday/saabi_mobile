@@ -9,6 +9,12 @@ Saabi Plus is the identity and intelligence layer the informal economy is missin
 - **Rounds (Ajo/Esusu/Adashe):** A dedicated group savings feature allowing users to form savings circles, track payouts, and manage their turns transparently.
 - **Smart Transfers:** A professional, PalmPay-inspired transfer flow that breaks down sending money into intuitive steps (Recipient, Amount/Remark, Reminder, and Payment Summary).
 
+## Nomba API Integration
+
+Saabi Plus leverages the robust **Nomba API** to power its financial infrastructure:
+- **Transfers API:** Facilitates seamless, instantaneous peer-to-peer and bank transfers initiated through the AI chat or standard UI.
+- **Virtual Accounts API:** Powers the Rounds (Ajo) feature, automating recurring deposits from group members into a centralized circle vault. Validates informal user identities and ties them to verified financial data, powering the intelligence layer.
+
 ## Architecture & Tech Stack
 
 - **Framework:** Flutter

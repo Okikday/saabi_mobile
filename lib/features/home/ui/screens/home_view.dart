@@ -15,7 +15,7 @@ class HomeView extends StatelessWidget {
       header: FHeader(
         title: const Text('Home'),
         suffixes: [
-          FHeaderAction(icon: const Icon(Icons.settings_rounded), onPress: () => Routes.settings.push(context)),
+          FHeaderAction(icon: const Icon(HugeIconsSolid.settings02), onPress: () => Routes.settings.push(context)),
         ],
       ),
       child: _HomeContent(),

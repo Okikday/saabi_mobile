@@ -18,6 +18,16 @@ final class AppColors {
   static const Color neutralWhite100 = Color(0xFFF5F5F5);
   static const Color neutralWhite300 = premiumWhite;
 
+  // Modern Light Theme Colors
+  static const Color lightBg = Color(0xFFF9FAFB);
+  static const Color lightCardBg = Color(0xFFFFFFFF);
+  static const Color lightBorder = Color(0xFFE5E7EB);
+  static const Color lightMuted = Color(0xFFF3F4F6);
+  static const Color lightMutedForeground = Color(0xFF6B7280);
+  static const Color lightForeground = Color(0xFF111827);
+  static const Color lightSecondary = Color(0xFFE5E7EB);
+  static const Color lightSecondaryForeground = Color(0xFF111827);
+
   static const Color neutralBlack50 = Color(0xFF232323);
   static const Color neutralBlack100 = Color(0xFF1B1B1B);
   static const Color neutralBlack200 = Color(0xFF181818);

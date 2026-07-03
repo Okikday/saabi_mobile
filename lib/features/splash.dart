@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:saabi_mobile/shared/routes/app_router.dart';
-import 'package:saabi_mobile/shared/theme/src/app_colors.dart';
+import 'package:forui/forui.dart';
 
 /// Branded splash screen.
 ///
@@ -42,8 +42,9 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: AppColors.darkBg,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 500),
+      color: context.theme.colors.background,
       child: FadeTransition(
         opacity: _fadeIn,
         child: Center(
@@ -54,15 +55,15 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
                 width: 72,
                 height: 72,
                 decoration: BoxDecoration(
-                  color: AppColors.accent.withValues(alpha: 0.12),
+                  color: context.theme.colors.primary.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.accent, width: 1.5),
+                  border: Border.all(color: context.theme.colors.primary, width: 1.5),
                 ),
-                child: const Center(
+                child: Center(
                   child: Text(
                     'S',
                     style: TextStyle(
-                      color: AppColors.accent,
+                      color: context.theme.colors.primary,
                       fontSize: 32,
                       fontWeight: FontWeight.w700,
                     ),
@@ -70,20 +71,20 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 'Saabi Plus',
                 style: TextStyle(
-                  color: AppColors.premiumWhite,
+                  color: context.theme.colors.foreground,
                   fontSize: 26,
                   fontWeight: FontWeight.w700,
                   letterSpacing: -0.3,
                 ),
               ),
               const SizedBox(height: 6),
-              const Text(
+              Text(
                 'AI Financial OS',
                 style: TextStyle(
-                  color: AppColors.neutralBlack400,
+                  color: context.theme.colors.mutedForeground,
                   fontSize: 13,
                   fontWeight: FontWeight.w400,
                   letterSpacing: 0.2,

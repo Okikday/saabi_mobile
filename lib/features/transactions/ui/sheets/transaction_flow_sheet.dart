@@ -8,6 +8,7 @@ Future<void> showTransactionSheet(BuildContext context, {SaabiIntent? initialInt
   return showFSheet(
     context: context,
     side: FLayout.btt,
+    mainAxisMaxRatio: 8 / 10,
     builder: (context) => TransactionFlowSheet(initialIntent: initialIntent),
   );
 }
@@ -96,10 +97,7 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
                   width: 40,
                   height: 4,
                   margin: const EdgeInsets.only(bottom: 16),
-                  decoration: BoxDecoration(
-                    color: context.theme.colors.border,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
+                  decoration: BoxDecoration(color: context.theme.colors.border, borderRadius: BorderRadius.circular(2)),
                 ),
               ),
               // Header row with back/close button
@@ -116,9 +114,9 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
                   Text(
                     _isTransfer ? 'Transfer to Bank Account' : 'Send Money',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: context.theme.colors.foreground,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      color: context.theme.colors.foreground,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
@@ -136,10 +134,7 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
                     alignment: Alignment.topCenter,
                     child: AnimatedSwitcher(
                       duration: const Duration(milliseconds: 300),
-                      child: KeyedSubtree(
-                        key: ValueKey(_currentStep),
-                        child: _getCurrentStepWidget(),
-                      ),
+                      child: KeyedSubtree(key: ValueKey(_currentStep), child: _getCurrentStepWidget()),
                     ),
                   ),
                 ),
@@ -183,9 +178,9 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
               Text(
                 'Recipient Account',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: context.theme.colors.mutedForeground,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  color: context.theme.colors.mutedForeground,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               const SizedBox(height: 12),
               FTextField(
@@ -210,9 +205,9 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
                     children: [
                       Text(
                         'Select Bank',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: context.theme.colors.mutedForeground,
-                            ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.copyWith(color: context.theme.colors.mutedForeground),
                       ),
                       Icon(Icons.chevron_right_rounded, color: context.theme.colors.mutedForeground),
                     ],
@@ -225,28 +220,24 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
         const SizedBox(height: 24),
         Text(
           'Recents',
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: context.theme.colors.foreground,
-                fontWeight: FontWeight.w600,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(color: context.theme.colors.foreground, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 12),
         ListView(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           children: [
-            _buildRecentItem('Ahmad Jani Idris', '5938165402 • Moniepoint', 'A'),
-            _buildRecentItem('Thankgod Super Store', '5230010653 • Moniepoint', 'T'),
-            _buildRecentItem('Yakubu Kehinde', '5871797384 • Moniepoint', 'Y'),
+            _buildRecentItem('Jane Doe', '0123456789 • Nomba Bank', 'J'),
+            _buildRecentItem('John Smith', '9876543210 • Global Bank', 'J'),
+            _buildRecentItem('Alice Johnson', '1122334455 • Tech Bank', 'A'),
           ],
         ),
         const SizedBox(height: 16),
         SizedBox(
           width: double.infinity,
-          child: FButton(
-            onPress: _nextStep,
-            child: const Text('Next'),
-          ),
+          child: FButton(onPress: _nextStep, child: const Text('Next')),
         ),
       ],
     );
@@ -262,10 +253,7 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
             backgroundColor: context.theme.colors.primary.withValues(alpha: 0.1),
             child: Text(
               avatar,
-              style: TextStyle(
-                color: context.theme.colors.primary,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(color: context.theme.colors.primary, fontWeight: FontWeight.bold),
             ),
           ),
           const SizedBox(width: 12),
@@ -275,16 +263,13 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
               children: [
                 Text(
                   name,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: context.theme.colors.foreground,
-                        fontWeight: FontWeight.w500,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: context.theme.colors.foreground, fontWeight: FontWeight.w500),
                 ),
                 Text(
                   details,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: context.theme.colors.mutedForeground,
-                      ),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.theme.colors.mutedForeground),
                 ),
               ],
             ),
@@ -296,114 +281,103 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
 
   Widget _buildAmountStep() {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Resolved recipient banner
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: context.theme.colors.card,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: context.theme.colors.border),
-            ),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 18,
-                  backgroundColor: context.theme.colors.primary.withValues(alpha: 0.1),
-                  child: Icon(Icons.account_balance_rounded, size: 18, color: context.theme.colors.primary),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _recipient.isNotEmpty ? _recipient : 'Okikiola Adedayo Gbeleyi',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: context.theme.colors.foreground,
-                              fontWeight: FontWeight.w600,
-                            ),
-                      ),
-                      Text(
-                        '8164697465 • PalmPay',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: context.theme.colors.mutedForeground,
-                            ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Resolved recipient banner
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: context.theme.colors.card,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: context.theme.colors.border),
           ),
-          const SizedBox(height: 24),
-          Text(
-            'Amount',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: context.theme.colors.mutedForeground,
-                  fontWeight: FontWeight.w500,
-                ),
-          ),
-          const SizedBox(height: 12),
-          FTextField(
-            control: FTextFieldControl.managed(
-              initial: TextEditingValue(text: _amount > 0 ? _amount.toString() : ''),
-              onChange: (value) {
-                _amount = double.tryParse(value.text) ?? 0.0;
-              },
-            ),
-            hint: '₦0.00',
-            keyboardType: TextInputType.number,
-          ),
-          const SizedBox(height: 16),
-          // Quick amount chips
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
+          child: Row(
             children: [
-              _buildAmountChip(500),
-              _buildAmountChip(1000),
-              _buildAmountChip(2000),
-              _buildAmountChip(5000),
-              _buildAmountChip(9999),
-              _buildAmountChip(10000),
+              CircleAvatar(
+                radius: 18,
+                backgroundColor: context.theme.colors.primary.withValues(alpha: 0.1),
+                child: Icon(Icons.account_balance_rounded, size: 18, color: context.theme.colors.primary),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _recipient.isNotEmpty ? _recipient : 'Jane Doe',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: context.theme.colors.foreground,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      '0123456789 • Nomba Bank',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: context.theme.colors.mutedForeground),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 24),
-          Text(
-            'Remark',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: context.theme.colors.mutedForeground,
-                  fontWeight: FontWeight.w500,
-                ),
+        ),
+        const SizedBox(height: 24),
+        Text(
+          'Amount',
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: context.theme.colors.mutedForeground, fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: 12),
+        FTextField(
+          control: FTextFieldControl.managed(
+            initial: TextEditingValue(text: _amount > 0 ? _amount.toString() : ''),
+            onChange: (value) {
+              _amount = double.tryParse(value.text) ?? 0.0;
+            },
           ),
-          const SizedBox(height: 12),
-          FTextField(
-            control: FTextFieldControl.managed(
-              initial: TextEditingValue(text: _remark),
-              onChange: (value) => _remark = value.text,
-            ),
-            hint: 'What is this for?',
+          hint: '₦0.00',
+          keyboardType: TextInputType.number,
+        ),
+        const SizedBox(height: 16),
+        // Quick amount chips
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            _buildAmountChip(500),
+            _buildAmountChip(1000),
+            _buildAmountChip(2000),
+            _buildAmountChip(5000),
+            _buildAmountChip(9999),
+            _buildAmountChip(10000),
+          ],
+        ),
+        const SizedBox(height: 24),
+        Text(
+          'Remark',
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: context.theme.colors.mutedForeground, fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: 12),
+        FTextField(
+          control: FTextFieldControl.managed(
+            initial: TextEditingValue(text: _remark),
+            onChange: (value) => _remark = value.text,
           ),
-          const SizedBox(height: 16),
-          Wrap(
-            spacing: 8,
-            children: [
-              _buildRemarkChip('Purchase'),
-              _buildRemarkChip('Personal'),
-            ],
-          ),
-          const SizedBox(height: 24),
-          SizedBox(
-            width: double.infinity,
-            child: FButton(
-              onPress: _nextStep,
-              child: const Text('Confirm'),
-            ),
-          ),
-        ],
-      );
+          hint: 'What is this for?',
+        ),
+        const SizedBox(height: 16),
+        Wrap(spacing: 8, children: [_buildRemarkChip('Purchase'), _buildRemarkChip('Personal')]),
+        const SizedBox(height: 24),
+        SizedBox(
+          width: double.infinity,
+          child: FButton(onPress: _nextStep, child: const Text('Confirm')),
+        ),
+      ],
+    );
   }
 
   Widget _buildAmountChip(double amount) {
@@ -419,16 +393,14 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
         decoration: BoxDecoration(
           color: isSelected ? context.theme.colors.primary : context.theme.colors.card,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: isSelected ? context.theme.colors.primary : context.theme.colors.border,
-          ),
+          border: Border.all(color: isSelected ? context.theme.colors.primary : context.theme.colors.border),
         ),
         child: Text(
           _currencyFormat.format(amount).replaceAll('.00', ''),
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: isSelected ? context.theme.colors.primaryForeground : context.theme.colors.foreground,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-              ),
+            color: isSelected ? context.theme.colors.primaryForeground : context.theme.colors.foreground,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+          ),
         ),
       ),
     );
@@ -447,16 +419,14 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
         decoration: BoxDecoration(
           color: isSelected ? context.theme.colors.primary : context.theme.colors.card,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: isSelected ? context.theme.colors.primary : context.theme.colors.border,
-          ),
+          border: Border.all(color: isSelected ? context.theme.colors.primary : context.theme.colors.border),
         ),
         child: Text(
           label,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: isSelected ? context.theme.colors.primaryForeground : context.theme.colors.foreground,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-              ),
+            color: isSelected ? context.theme.colors.primaryForeground : context.theme.colors.foreground,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+          ),
         ),
       ),
     );
@@ -471,19 +441,17 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
         const SizedBox(height: 16),
         Text(
           'Reminder',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: context.theme.colors.foreground,
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(color: context.theme.colors.foreground, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         Text(
           'Double check the transfer details before you proceed.\nPlease note that successful transfers cannot be reversed.',
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: context.theme.colors.mutedForeground,
-                height: 1.5,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: context.theme.colors.mutedForeground, height: 1.5),
         ),
         const SizedBox(height: 24),
         Container(
@@ -498,15 +466,14 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
             children: [
               Text(
                 'Transaction Details',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: context.theme.colors.foreground,
-                      fontWeight: FontWeight.w600,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(color: context.theme.colors.foreground, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 16),
-              _buildDetailRow('Name', _recipient.isNotEmpty ? _recipient : 'OKIKIOLA ADEDAYO'),
-              _buildDetailRow('Account No.', '8164697465'),
-              _buildDetailRow('Bank', 'PalmPay'),
+              _buildDetailRow('Name', _recipient.isNotEmpty ? _recipient : 'JANE DOE'),
+              _buildDetailRow('Account No.', '0123456789'),
+              _buildDetailRow('Bank', 'Nomba Bank'),
               _buildDetailRow('Amount', _currencyFormat.format(_amount)),
             ],
           ),
@@ -515,17 +482,11 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
         Row(
           children: [
             Expanded(
-              child: FButton(
-                onPress: _prevStep,
-                child: const Text('Recheck'),
-              ),
+              child: FButton(onPress: _prevStep, child: const Text('Recheck')),
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: FButton(
-                onPress: _nextStep,
-                child: const Text('Continue'),
-              ),
+              child: FButton(onPress: _nextStep, child: const Text('Continue')),
             ),
           ],
         ),
@@ -539,114 +500,106 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
     final total = _amount + fee + vat;
 
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 12),
-          Text(
-            _currencyFormat.format(total),
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                  color: context.theme.colors.foreground,
-                  fontWeight: FontWeight.w700,
-                ),
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SizedBox(height: 12),
+        Text(
+          _currencyFormat.format(total),
+          style: Theme.of(
+            context,
+          ).textTheme.displaySmall?.copyWith(color: context.theme.colors.foreground, fontWeight: FontWeight.w700),
+        ),
+        const SizedBox(height: 24),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: context.theme.colors.card,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: context.theme.colors.border),
           ),
-          const SizedBox(height: 24),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: context.theme.colors.card,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: context.theme.colors.border),
-            ),
-            child: Column(
-              children: [
-                _buildDetailRow('Bank', 'PalmPay'),
-                _buildDetailRow('Account Number', '8164697465'),
-                _buildDetailRow('Name', _recipient.isNotEmpty ? _recipient : 'OKIKIOLA ADEDAYO'),
-                _buildDetailRow('Amount', _currencyFormat.format(_amount)),
-                _buildDetailRow('Fee', _currencyFormat.format(fee)),
-                _buildDetailRow('VAT', _currencyFormat.format(vat)),
-                const Divider(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Use Cashback',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: context.theme.colors.mutedForeground,
-                          ),
-                    ),
-                    Text(
-                      'Use ₦51.37 to offset fee',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: context.theme.colors.primary,
-                            fontWeight: FontWeight.w500,
-                          ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 24),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'Payment Method',
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: context.theme.colors.foreground,
-                    fontWeight: FontWeight.w600,
+          child: Column(
+            children: [
+              _buildDetailRow('Bank', 'Nomba Bank'),
+              _buildDetailRow('Account Number', '0123456789'),
+              _buildDetailRow('Name', _recipient.isNotEmpty ? _recipient : 'JANE DOE'),
+              _buildDetailRow('Amount', _currencyFormat.format(_amount)),
+              _buildDetailRow('Fee', _currencyFormat.format(fee)),
+              _buildDetailRow('VAT', _currencyFormat.format(vat)),
+              const Divider(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Use Cashback',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: context.theme.colors.mutedForeground),
                   ),
-            ),
+                  Text(
+                    'Use ₦51.37 to offset fee',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: context.theme.colors.primary, fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+            ],
           ),
-          const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: context.theme.colors.card,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: context.theme.colors.primary),
-            ),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 14,
-                  backgroundColor: context.theme.colors.background,
-                  child: Icon(Icons.wallet_rounded, size: 16, color: context.theme.colors.primary),
-                ),
-                const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Available Balance',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: context.theme.colors.foreground,
-                            fontWeight: FontWeight.w500,
-                          ),
+        ),
+        const SizedBox(height: 24),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Payment Method',
+            style: Theme.of(
+              context,
+            ).textTheme.titleSmall?.copyWith(color: context.theme.colors.foreground, fontWeight: FontWeight.w600),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: context.theme.colors.card,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: context.theme.colors.primary),
+          ),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 14,
+                backgroundColor: context.theme.colors.background,
+                child: Icon(Icons.wallet_rounded, size: 16, color: context.theme.colors.primary),
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Available Balance',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: context.theme.colors.foreground,
+                      fontWeight: FontWeight.w500,
                     ),
-                    Text(
-                      _currencyFormat.format(8268.87),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: context.theme.colors.mutedForeground,
-                          ),
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                Icon(Icons.check_circle_rounded, color: context.theme.colors.primary),
-              ],
-            ),
+                  ),
+                  Text(
+                    _currencyFormat.format(8268.87),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.theme.colors.mutedForeground),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Icon(Icons.check_circle_rounded, color: context.theme.colors.primary),
+            ],
           ),
-          const SizedBox(height: 24),
-          SizedBox(
-            width: double.infinity,
-            child: FButton(
-              onPress: _nextStep,
-              child: const Text('Pay'),
-            ),
-          ),
-        ],
-      );
+        ),
+        const SizedBox(height: 24),
+        SizedBox(
+          width: double.infinity,
+          child: FButton(onPress: _nextStep, child: const Text('Pay')),
+        ),
+      ],
+    );
   }
 
   Widget _buildDetailRow(String label, String value) {
@@ -657,16 +610,13 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
         children: [
           Text(
             label,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: context.theme.colors.mutedForeground,
-                ),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.theme.colors.mutedForeground),
           ),
           Text(
             value,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: context.theme.colors.foreground,
-                  fontWeight: FontWeight.w500,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: context.theme.colors.foreground, fontWeight: FontWeight.w500),
           ),
         ],
       ),
