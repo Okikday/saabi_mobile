@@ -62,14 +62,16 @@ class _BalanceCardState extends State<_BalanceCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: context.theme.colors.card,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: context.theme.colors.border),
-      ),
-      child: Column(
+    return GestureDetector(
+      onDoubleTap: () => setState(() => _isHidden = !_isHidden),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: context.theme.colors.card,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: context.theme.colors.border),
+        ),
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -100,6 +102,7 @@ class _BalanceCardState extends State<_BalanceCard> {
           ),
         ],
       ),
+    ),
     );
   }
 }

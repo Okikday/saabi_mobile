@@ -1,28 +1,17 @@
 import 'package:forui/forui.dart';
 import 'package:flutter/material.dart';
+import 'package:hugeicons_pro/hugeicons.dart';
 
 /// Bottom navigation bar for the main shell — Home, Saabi, Rounds.
 class MainBottomNavBar extends StatelessWidget {
-  const MainBottomNavBar({
-    super.key,
-    required this.currentIndex,
-    required this.onTapItem,
-  });
+  const MainBottomNavBar({super.key, required this.currentIndex, required this.onTapItem});
 
   final int currentIndex;
   final void Function(int index) onTapItem;
 
   static const _labels = ['Home', 'Saabi', 'Rounds'];
-  static const _icons = [
-    Icons.home_outlined,
-    Icons.auto_awesome_outlined,
-    Icons.group_outlined,
-  ];
-  static const _activeIcons = [
-    Icons.home_rounded,
-    Icons.auto_awesome_rounded,
-    Icons.group_rounded,
-  ];
+  static const _icons = [HugeIconsStroke.home01, HugeIconsStroke.aiMagic, HugeIconsStroke.userGroup];
+  static const _activeIcons = [HugeIconsSolid.home01, HugeIconsSolid.aiMagic, HugeIconsSolid.userGroup];
 
   @override
   Widget build(BuildContext context) {

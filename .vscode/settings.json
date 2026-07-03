@@ -2,7 +2,6 @@
     "dart.lineLength": 120,
     "java.configuration.updateBuildConfiguration": "interactive",
     "files.exclude": {
-        "macos/": true,
         "linux/": true,
         "web/": true,
         "windows/": true,
