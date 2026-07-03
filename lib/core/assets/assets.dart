@@ -1,17 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/rendering.dart';
 
-part 'src/icon_strings.dart';
-part 'src/image_strings.dart';
-part 'src/logo_strings.dart';
-part 'src/svg_strings.dart';
-
-class Assets {
-  static ImageStrings images = ImageStrings.instance;
-  static IconStrings icons = IconStrings.instance;
-  static LogoStrings logos = LogoStrings.instance;
-  static SvgStrings svgs = SvgStrings.instance;
-}
+export 'assets.gen.dart';
 
 extension AssetsExtension on String {
   AssetImage get asImageProvider => AssetImage(this);
+  CachedNetworkImageProvider get asNetworkImageProvider => CachedNetworkImageProvider(this);
 }

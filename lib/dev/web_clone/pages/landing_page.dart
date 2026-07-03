@@ -89,8 +89,8 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                           Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: SaabiTheme.accent.withOpacity(0.16),
-                              boxShadow: [BoxShadow(color: SaabiTheme.accent.withOpacity(0.24), blurRadius: 110)],
+                              color: SaabiTheme.accent.withValues(alpha: 0.16),
+                              boxShadow: [BoxShadow(color: SaabiTheme.accent.withValues(alpha: 0.24), blurRadius: 110)],
                             ),
                           ),
                           AnimatedBuilder(
@@ -103,7 +103,7 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color: SaabiTheme.accent.withOpacity(0.2),
+                                  color: SaabiTheme.accent.withValues(alpha: 0.2),
                                   width: 1.2,
                                   style: BorderStyle.solid,
                                 ),
@@ -120,7 +120,7 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color: Colors.white.withOpacity(0.1),
+                                  color: Colors.white.withValues(alpha: 0.1),
                                   width: 1.2,
                                   style: BorderStyle.solid,
                                 ),
@@ -153,9 +153,9 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                           width: 4,
                           height: 4,
                           decoration: BoxDecoration(
-                            color: SaabiTheme.accent.withOpacity(0.6),
+                            color: SaabiTheme.accent.withValues(alpha: 0.6),
                             shape: BoxShape.circle,
-                            boxShadow: [BoxShadow(color: SaabiTheme.accent.withOpacity(0.3), blurRadius: 10)],
+                            boxShadow: [BoxShadow(color: SaabiTheme.accent.withValues(alpha: 0.3), blurRadius: 10)],
                           ),
                         ),
                       ),
@@ -196,9 +196,9 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                   decoration: BoxDecoration(
-                    color: SaabiTheme.accent.withOpacity(0.12),
+                    color: SaabiTheme.accent.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: SaabiTheme.accent.withOpacity(0.25)),
+                    border: Border.all(color: SaabiTheme.accent.withValues(alpha: 0.25)),
                   ),
                   child: Text(
                     'FOR SAABI PEOPLE, BY SAABI PEOPLE',
@@ -228,7 +228,7 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                     textAlign: TextAlign.center,
                     style: Theme.of(
                       context,
-                    ).textTheme.titleMedium?.copyWith(color: Colors.white.withOpacity(0.6), height: 1.6),
+                    ).textTheme.titleMedium?.copyWith(color: Colors.white.withValues(alpha: 0.6), height: 1.6),
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -254,7 +254,7 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                     OutlinedButton(
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        side: BorderSide(color: Colors.white.withOpacity(0.16)),
+                        side: BorderSide(color: Colors.white.withValues(alpha: 0.16)),
                         padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 18),
                         shape: const StadiumBorder(),
                       ),
@@ -309,7 +309,7 @@ class _HeroStat extends StatelessWidget {
             label.toUpperCase(),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: Colors.white.withOpacity(0.42),
+              color: Colors.white.withValues(alpha: 0.42),
               fontWeight: FontWeight.w900,
               letterSpacing: 1.5,
             ),
@@ -425,7 +425,7 @@ class OnboardingSection extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 48),
       decoration: BoxDecoration(
         color: const Color(0xFF050505),
-        border: Border.symmetric(horizontal: BorderSide(color: Colors.white.withOpacity(0.05))),
+        border: Border.symmetric(horizontal: BorderSide(color: Colors.white.withValues(alpha: 0.05))),
       ),
       child: Column(
         children: [
@@ -460,7 +460,7 @@ class OnboardingSection extends StatelessWidget {
                         ),
                         TextSpan(
                           text: 'And Join The Sabbi People',
-                          style: TextStyle(color: Colors.white.withOpacity(0.4)),
+                          style: TextStyle(color: Colors.white.withValues(alpha: 0.4)),
                         ),
                       ],
                     ),
@@ -497,9 +497,9 @@ class _OnboardingCard extends StatelessWidget {
                 width: 88,
                 height: 88,
                 decoration: BoxDecoration(
-                  color: SaabiTheme.accent.withOpacity(0.1),
+                  color: SaabiTheme.accent.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(26),
-                  border: Border.all(color: SaabiTheme.accent.withOpacity(0.2)),
+                  border: Border.all(color: SaabiTheme.accent.withValues(alpha: 0.2)),
                 ),
                 child: Icon(step.icon, color: SaabiTheme.accent, size: 34),
               ),
@@ -527,20 +527,22 @@ class _OnboardingCard extends StatelessWidget {
           Text(
             step.description,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white.withOpacity(0.4), height: 1.5),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.white.withValues(alpha: 0.4), height: 1.5),
           ),
           const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.05),
+              color: Colors.white.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white.withOpacity(0.08)),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
             ),
             child: Text(
               step.detail,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: Colors.white.withOpacity(0.4),
+                color: Colors.white.withValues(alpha: 0.4),
                 fontWeight: FontWeight.w900,
                 letterSpacing: 2.6,
               ),
@@ -572,9 +574,9 @@ class WhatsAppBotSection extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: SaabiTheme.accent.withOpacity(0.1),
+                color: SaabiTheme.accent.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(999),
-                border: Border.all(color: SaabiTheme.accent.withOpacity(0.2)),
+                border: Border.all(color: SaabiTheme.accent.withValues(alpha: 0.2)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -732,7 +734,7 @@ class _PricingCard extends StatelessWidget {
             width: 50,
             height: 50,
             decoration: BoxDecoration(
-              color: plan.popular ? SaabiTheme.accent.withOpacity(0.2) : Colors.white.withOpacity(0.05),
+              color: plan.popular ? SaabiTheme.accent.withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(
@@ -745,7 +747,7 @@ class _PricingCard extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             plan.description,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white.withOpacity(0.4)),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white.withValues(alpha: 0.4)),
           ),
           const SizedBox(height: 18),
           Text(plan.price, style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w900)),
@@ -759,9 +761,9 @@ class _PricingCard extends StatelessWidget {
                     width: 18,
                     height: 18,
                     decoration: BoxDecoration(
-                      color: SaabiTheme.accent.withOpacity(0.1),
+                      color: SaabiTheme.accent.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
-                      border: Border.all(color: SaabiTheme.accent.withOpacity(0.18)),
+                      border: Border.all(color: SaabiTheme.accent.withValues(alpha: 0.18)),
                     ),
                     child: const Icon(Icons.check, size: 10, color: SaabiTheme.accent),
                   ),
@@ -769,7 +771,9 @@ class _PricingCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       feature,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white.withOpacity(0.6)),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: Colors.white.withValues(alpha: 0.6)),
                     ),
                   ),
                 ],
@@ -782,7 +786,7 @@ class _PricingCard extends StatelessWidget {
             child: FilledButton(
               onPressed: () {},
               style: FilledButton.styleFrom(
-                backgroundColor: plan.popular ? SaabiTheme.accent : Colors.white.withOpacity(0.06),
+                backgroundColor: plan.popular ? SaabiTheme.accent : Colors.white.withValues(alpha: 0.06),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -837,7 +841,7 @@ class CTASection extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: Theme.of(
                   context,
-                ).textTheme.titleMedium?.copyWith(color: Colors.white.withOpacity(0.75), height: 1.5),
+                ).textTheme.titleMedium?.copyWith(color: Colors.white.withValues(alpha: 0.75), height: 1.5),
               ),
               const SizedBox(height: 22),
               FilledButton.icon(

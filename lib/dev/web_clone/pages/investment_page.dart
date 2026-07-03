@@ -41,15 +41,17 @@ class InvestmentPage extends StatelessWidget {
         const SizedBox(height: 10),
         Text(
           'Sabi your money, make your money Sabi for you. No amount is too small to build your future.',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white.withOpacity(0.45), height: 1.5),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(color: Colors.white.withValues(alpha: 0.45), height: 1.5),
         ),
         const SizedBox(height: 18),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
-            color: SaabiTheme.accent.withOpacity(0.1),
+            color: SaabiTheme.accent.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(999),
-            border: Border.all(color: SaabiTheme.accent.withOpacity(0.2)),
+            border: Border.all(color: SaabiTheme.accent.withValues(alpha: 0.2)),
           ),
           child: const Text(
             'Powered by SAABI Engine + Squad API',
@@ -112,7 +114,7 @@ class InvestmentPage extends StatelessWidget {
         const SizedBox(height: 6),
         Text(
           'Simple, secure, and tailored for your hustle.',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white.withOpacity(0.45)),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white.withValues(alpha: 0.45)),
         ),
         const SizedBox(height: 16),
         Column(
@@ -222,12 +224,12 @@ class _PlanCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             plan.amount,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white.withOpacity(0.65)),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white.withValues(alpha: 0.65)),
           ),
           const SizedBox(height: 4),
           Text(
             plan.duration,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white.withOpacity(0.4)),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white.withValues(alpha: 0.4)),
           ),
           const SizedBox(height: 16),
           ...plan.features.map(
@@ -240,7 +242,9 @@ class _PlanCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       feature,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white.withOpacity(0.65)),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: Colors.white.withValues(alpha: 0.65)),
                     ),
                   ),
                 ],
@@ -253,7 +257,7 @@ class _PlanCard extends StatelessWidget {
             child: FilledButton(
               onPressed: () {},
               style: FilledButton.styleFrom(
-                backgroundColor: plan.popular ? SaabiTheme.accent : Colors.white.withOpacity(0.07),
+                backgroundColor: plan.popular ? SaabiTheme.accent : Colors.white.withValues(alpha: 0.07),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -295,11 +299,14 @@ class _QuickActionTile extends StatelessWidget {
       leading: Container(
         width: 44,
         height: 44,
-        decoration: BoxDecoration(color: SaabiTheme.accent.withOpacity(0.12), borderRadius: BorderRadius.circular(16)),
+        decoration: BoxDecoration(
+          color: SaabiTheme.accent.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(16),
+        ),
         child: Icon(icon, color: SaabiTheme.accent),
       ),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w900)),
-      subtitle: Text(subtitle, style: TextStyle(color: Colors.white.withOpacity(0.45))),
+      subtitle: Text(subtitle, style: TextStyle(color: Colors.white.withValues(alpha: 0.45))),
     );
   }
 }
@@ -319,7 +326,7 @@ class _TipRow extends StatelessWidget {
           const Icon(Icons.circle, color: SaabiTheme.accent, size: 8),
           const SizedBox(width: 10),
           Expanded(
-            child: Text(text, style: TextStyle(color: Colors.white.withOpacity(0.65), height: 1.5)),
+            child: Text(text, style: TextStyle(color: Colors.white.withValues(alpha: 0.65), height: 1.5)),
           ),
         ],
       ),

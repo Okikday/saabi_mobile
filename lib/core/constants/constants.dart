@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-part 'src/enums.dart';
-part 'src/typedefs.dart';
+export 'enums/enums.dart';
+part 'type_definitions/typedefs.dart';
 part 'src/spacing.dart';

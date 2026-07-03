@@ -21,7 +21,7 @@ class DashboardPage extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           'A mobile-first clone of the analytics and workflow shell from the web app.',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white.withOpacity(0.45)),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white.withValues(alpha: 0.45)),
         ),
         const SizedBox(height: 18),
         Wrap(
@@ -43,10 +43,34 @@ class DashboardPage extends StatelessWidget {
           shrinkWrap: true,
           childAspectRatio: 1.25,
           children: const [
-            MetricCard(value: '₦142,500', label: 'Total Transactions', detail: '+12.5% from last month', emphasis: true, icon: Icons.account_balance_wallet_outlined),
-            MetricCard(value: '24', label: 'WhatsApp Chats', detail: '+5.2% from last month', emphasis: false, icon: Icons.chat_bubble_outline),
-            MetricCard(value: '12', label: 'Service Searches', detail: '-2.1% from last month', emphasis: false, icon: Icons.search),
-            MetricCard(value: '3', label: 'Active Requests', detail: '+1 from last week', emphasis: false, icon: Icons.bolt),
+            MetricCard(
+              value: '₦142,500',
+              label: 'Total Transactions',
+              detail: '+12.5% from last month',
+              emphasis: true,
+              icon: Icons.account_balance_wallet_outlined,
+            ),
+            MetricCard(
+              value: '24',
+              label: 'WhatsApp Chats',
+              detail: '+5.2% from last month',
+              emphasis: false,
+              icon: Icons.chat_bubble_outline,
+            ),
+            MetricCard(
+              value: '12',
+              label: 'Service Searches',
+              detail: '-2.1% from last month',
+              emphasis: false,
+              icon: Icons.search,
+            ),
+            MetricCard(
+              value: '3',
+              label: 'Active Requests',
+              detail: '+1 from last week',
+              emphasis: false,
+              icon: Icons.bolt,
+            ),
           ],
         ),
         const SizedBox(height: 20),
@@ -55,7 +79,10 @@ class DashboardPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Monthly Activity', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900)),
+              Text(
+                'Monthly Activity',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+              ),
               const SizedBox(height: 18),
               const _SimpleBarChart(values: [0.44, 0.52, 0.38, 0.66, 0.59, 0.92]),
             ],
@@ -67,9 +94,14 @@ class DashboardPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Credibility Score', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900)),
+              Text(
+                'Credibility Score',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+              ),
               const SizedBox(height: 20),
-              const Center(child: RoiRing(percent: 0.85, centerLabel: 'SCORE', centerValue: '85%')),
+              const Center(
+                child: RoiRing(percent: 0.85, centerLabel: 'SCORE', centerValue: '85%'),
+              ),
             ],
           ),
         ),
@@ -104,12 +136,35 @@ class DashboardPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('WhatsApp History', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900)),
+              Text(
+                'WhatsApp History',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+              ),
               const SizedBox(height: 12),
-              const _HistoryTile(title: 'Sent ₦5,000 to Baba Tolu', subtitle: 'Today, 10:45 AM', status: 'Completed', accent: SaabiTheme.accent),
-              const _HistoryTile(title: 'Found 3 Electricians in Ikeja', subtitle: 'Yesterday, 2:15 PM', status: 'Resolved', accent: Colors.blueAccent),
-              const _HistoryTile(title: 'Received ₦15,000 from Client Opay', subtitle: 'Yesterday, 9:00 AM', status: 'Completed', accent: Colors.green),
-              const _HistoryTile(title: 'Failed transfer to Quick Fix', subtitle: 'May 10, 4:20 PM', status: 'Failed', accent: Colors.redAccent),
+              const _HistoryTile(
+                title: 'Sent ₦5,000 to Baba Tolu',
+                subtitle: 'Today, 10:45 AM',
+                status: 'Completed',
+                accent: SaabiTheme.accent,
+              ),
+              const _HistoryTile(
+                title: 'Found 3 Electricians in Ikeja',
+                subtitle: 'Yesterday, 2:15 PM',
+                status: 'Resolved',
+                accent: Colors.blueAccent,
+              ),
+              const _HistoryTile(
+                title: 'Received ₦15,000 from Client Opay',
+                subtitle: 'Yesterday, 9:00 AM',
+                status: 'Completed',
+                accent: Colors.green,
+              ),
+              const _HistoryTile(
+                title: 'Failed transfer to Quick Fix',
+                subtitle: 'May 10, 4:20 PM',
+                status: 'Failed',
+                accent: Colors.redAccent,
+              ),
             ],
           ),
         ),
@@ -119,13 +174,28 @@ class DashboardPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Service Discovery', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900)),
+              Text(
+                'Service Discovery',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+              ),
               const SizedBox(height: 16),
               _DiscoveryTile(name: 'Baba Tolu', category: 'Plumbing', rate: '₦5,000/hr', lga: 'Ikeja', rating: '5.0'),
               const SizedBox(height: 12),
-              _DiscoveryTile(name: 'Quick Fix Electric', category: 'Electrical', rate: '₦4,000/hr', lga: 'Yaba', rating: '4.8'),
+              _DiscoveryTile(
+                name: 'Quick Fix Electric',
+                category: 'Electrical',
+                rate: '₦4,000/hr',
+                lga: 'Yaba',
+                rating: '4.8',
+              ),
               const SizedBox(height: 12),
-              _DiscoveryTile(name: 'Mama Nkechi', category: 'Food Delivery', rate: '₦2,500/meal', lga: 'Lekki', rating: '4.9'),
+              _DiscoveryTile(
+                name: 'Mama Nkechi',
+                category: 'Food Delivery',
+                rate: '₦2,500/meal',
+                lga: 'Lekki',
+                rating: '4.9',
+              ),
             ],
           ),
         ),
@@ -143,10 +213,13 @@ class _ActionChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Chip(
-      backgroundColor: Colors.white.withOpacity(0.05),
-      side: BorderSide(color: Colors.white.withOpacity(0.08)),
+      backgroundColor: Colors.white.withValues(alpha: 0.05),
+      side: BorderSide(color: Colors.white.withValues(alpha: 0.08)),
       avatar: Icon(icon, size: 18, color: SaabiTheme.accent),
-      label: Text(label, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800)),
+      label: Text(
+        label,
+        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
+      ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
     );
   }
@@ -175,11 +248,22 @@ class _SimpleBarChart extends StatelessWidget {
                       height: 160 * value,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
-                        gradient: const LinearGradient(colors: [SaabiTheme.accent, Color(0xFFFFB15A)], begin: Alignment.bottomCenter, end: Alignment.topCenter),
+                        gradient: const LinearGradient(
+                          colors: [SaabiTheme.accent, Color(0xFFFFB15A)],
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Container(height: 4, width: 12, decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), borderRadius: BorderRadius.circular(999))),
+                    Container(
+                      height: 4,
+                      width: 12,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -201,9 +285,9 @@ class _HeatChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: SaabiTheme.accent.withOpacity(0.1 + value * 0.08),
+        color: SaabiTheme.accent.withValues(alpha: 0.1 + value * 0.08),
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: SaabiTheme.accent.withOpacity(0.1 + value * 0.18)),
+        border: Border.all(color: SaabiTheme.accent.withValues(alpha: 0.1 + value * 0.18)),
       ),
       child: Text(label, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
     );
@@ -225,18 +309,27 @@ class _HistoryTile extends StatelessWidget {
       leading: Container(
         width: 40,
         height: 40,
-        decoration: BoxDecoration(color: accent.withOpacity(0.12), borderRadius: BorderRadius.circular(14)),
+        decoration: BoxDecoration(color: accent.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(14)),
         child: Icon(Icons.circle, color: accent, size: 16),
       ),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
-      subtitle: Text(subtitle, style: TextStyle(color: Colors.white.withOpacity(0.4))),
-      trailing: Text(status, style: TextStyle(color: accent, fontWeight: FontWeight.w900, fontSize: 11)),
+      subtitle: Text(subtitle, style: TextStyle(color: Colors.white.withValues(alpha: 0.4))),
+      trailing: Text(
+        status,
+        style: TextStyle(color: accent, fontWeight: FontWeight.w900, fontSize: 11),
+      ),
     );
   }
 }
 
 class _DiscoveryTile extends StatelessWidget {
-  const _DiscoveryTile({required this.name, required this.category, required this.rate, required this.lga, required this.rating});
+  const _DiscoveryTile({
+    required this.name,
+    required this.category,
+    required this.rate,
+    required this.lga,
+    required this.rating,
+  });
 
   final String name;
   final String category;
@@ -249,16 +342,19 @@ class _DiscoveryTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.04),
+        color: Colors.white.withValues(alpha: 0.04),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.07)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
       ),
       child: Row(
         children: [
           Container(
             width: 44,
             height: 44,
-            decoration: BoxDecoration(color: SaabiTheme.accent.withOpacity(0.12), borderRadius: BorderRadius.circular(16)),
+            decoration: BoxDecoration(
+              color: SaabiTheme.accent.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(16),
+            ),
             child: const Icon(Icons.person, color: SaabiTheme.accent),
           ),
           const SizedBox(width: 12),
@@ -268,16 +364,19 @@ class _DiscoveryTile extends StatelessWidget {
               children: [
                 Text(name, style: const TextStyle(fontWeight: FontWeight.w900)),
                 const SizedBox(height: 4),
-                Text('$category • $lga', style: TextStyle(color: Colors.white.withOpacity(0.45), fontSize: 12)),
+                Text('$category • $lga', style: TextStyle(color: Colors.white.withValues(alpha: 0.45), fontSize: 12)),
               ],
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(rate, style: const TextStyle(fontWeight: FontWeight.w900, color: SaabiTheme.accent)),
+              Text(
+                rate,
+                style: const TextStyle(fontWeight: FontWeight.w900, color: SaabiTheme.accent),
+              ),
               const SizedBox(height: 4),
-              Text('★ $rating', style: TextStyle(color: Colors.white.withOpacity(0.55), fontSize: 12)),
+              Text('★ $rating', style: TextStyle(color: Colors.white.withValues(alpha: 0.55), fontSize: 12)),
             ],
           ),
         ],
