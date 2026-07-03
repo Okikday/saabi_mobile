@@ -1,5 +1,7 @@
 # Flutter Deterministic Blueprint
 
+Default or fallback to flutter agent skills in cases you can't determine
+
 > A clean, scalable, highly debuggable Flutter architecture. Once you see a screen, you can predict exactly where its notifier, logic, and widgets live.
 
 ---
@@ -765,3 +767,138 @@ Before creating a new structural pattern in a feature, **check if any other feat
 > **Note to AI tooling:** Before generating any file or folder, verify the existing structure of the project and mirror established patterns. Only introduce new structural patterns when no existing precedent applies. All custom widgets defined in `lib/features` for later integration should be flagged for review with the developer before finalizing the blueprint.
 > **Crucial Rule for APIs/Widgets:** Always search and check the API signature/usages of a widget or function in the source code especially for foreign non-flutter before applying changes, unless you are 100% sure of the usage. This avoids round trips and compilation errors.
 Also, keep tracking in a cache_progress.md file in the project's root for changes you've made that might be beneficial to the next model. always make sure to update
+
+---
+
+## 11. Pod Structural Detail (Canonical Pattern)
+
+These rules formalize the exact file layout and code idioms used in the canonical feature folders (`main`, `auth_setup`).
+
+### 11.1 Providers Folder Layout
+
+```
+providers/
+├── models/
+│   ├── xxx_state.dart          ← immutable state class with copyWith
+│   └── src/                   ← sub-states if needed
+│       └── sub_xxx_state.dart
+└── src/
+    ├── xxx_pod.dart            ← the Notifier class + private provider
+    └── yyy_pod.dart            ← sub-pods for the same feature
+```
+
+Each feature may also expose a top-level `providers/xxx_pod.dart` barrel that re-exports the `src/` pods.
+
+### 11.2 Pod File Template
+
+```dart
+final _xxxProvider = NotifierProvider.autoDispose(
+  XxxPod.new,
+  name: 'XxxPod',
+);
+
+class XxxPod extends Notifier<XxxState> {
+  /// Static accessor — the only public handle to this provider.
+  static final me = _xxxProvider;
+
+  @override
+  XxxState build() {
+    // dispose hooks if needed: ref.onDispose(...)
+    return const XxxState();
+  }
+
+  // ─────────────────────────────────────────────────────────
+  // Guard-style setters: no-op when value hasn't changed.
+  // ─────────────────────────────────────────────────────────
+  void setLoading(bool v) => state.isLoading == v ? null : state = state.copyWith(isLoading: v);
+}
+```
+
+### 11.3 Access Patterns (use extension helpers)
+
+```dart
+// Read notifier (to call methods)
+final notifier = XxxPod.me.not(ref);       // WidgetRef context
+final notifier = XxxPod.me.notX(ref);      // Ref context (inside another notifier)
+
+// Watch state
+final state = XxxPod.me.watch(ref);        // AsyncValue<T> or T
+final notifier = XxxPod.me.watchNot(ref);  // watch the notifier itself
+
+// Read state (no rebuild)
+final state = XxxPod.me.read(ref);
+final state = XxxPod.me.readX(ref);
+```
+
+### 11.4 Cross-Pod Access
+
+If Pod B needs to call into Pod A, declare A as a `dependency` and use `ref`:
+
+```dart
+final _bProvider = NotifierProvider.autoDispose(
+  BPod.new,
+  dependencies: [APod.me],
+  name: 'BPod',
+);
+
+class BPod extends Notifier<BState> {
+  static final me = _bProvider;
+
+  void doSomething() {
+    final aState = APod.me.readX(ref);
+    APod.me.notX(ref).someMethod();
+  }
+}
+```
+
+### 11.5 KCachedNotifier for Persisted Primitives
+
+For simple persisted values (booleans, strings, ints), use `KCachedNotifier` directly — no extra pod class needed:
+
+```dart
+final xxxProvider = AsyncNotifierProvider<KCachedNotifier<bool, bool>, bool>(
+  () => KCachedNotifier<bool, bool>(
+    HiveKeys.xxxKey.name,
+    false, // default value
+  ),
+);
+```
+
+Paired with a `HiveKeys` enum entry:
+
+```dart
+enum HiveKeys<T> {
+  isSignedIn<bool>(),
+  themeMode<bool>(),
+  xxxKey<bool>(),   // ← add here
+}
+```
+
+### 11.6 Widget Folder Conventions
+
+- All widgets for a feature go in `ui/widgets/`, **not** as private classes inside a screen file, unless they are trivially small (< ~15 lines and single-purpose).
+- Sub-folder by screen when there are many widgets:
+  ```
+  ui/widgets/
+  ├── home/
+  │   ├── balance_card.dart
+  │   └── quick_actions_row.dart
+  └── src/
+      └── section_label.dart   ← shared across the feature's screens
+  ```
+- Sheets and bottom sheets are placed in `ui/sheets/` (e.g., `ui/sheets/more_actions_sheet.dart`).
+
+### 11.7 State Class Template
+
+```dart
+class XxxState {
+  final bool isLoading;
+  // ... other fields
+
+  const XxxState({this.isLoading = false});
+
+  XxxState copyWith({bool? isLoading}) {
+    return XxxState(isLoading: isLoading ?? this.isLoading);
+  }
+}
+```

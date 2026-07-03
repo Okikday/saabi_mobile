@@ -31,6 +31,13 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
   String _remark = '';
   bool _isTransfer = false;
 
+  // Bank lookup state (step 0 transfer)
+  bool _bankMatched = false;
+  String _matchedBankName = '';
+  String _matchedAccountName = '';
+  String? _selectedBank;
+  static const _bankNames = ['Nomba Bank', 'Access Bank', 'GTBank', 'UBA', 'Zenith Bank', 'First Bank', 'Opay'];
+
   final NumberFormat _currencyFormat = NumberFormat.currency(locale: 'en_NG', symbol: '₦');
 
   @override
@@ -186,32 +193,120 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
               FTextField(
                 control: FTextFieldControl.managed(
                   initial: TextEditingValue(text: _recipient),
-                  onChange: (value) => _recipient = value.text,
+                  onChange: (value) {
+                    _recipient = value.text;
+                    // Simulate account lookup after 10 digits
+                    if (_isTransfer && value.text.length == 10) {
+                      Future.delayed(const Duration(milliseconds: 600), () {
+                        if (!mounted || _recipient.length != 10) return;
+                        setState(() {
+                          _bankMatched = true;
+                          _matchedBankName = _selectedBank ?? 'Nomba Bank';
+                          _matchedAccountName = 'Kemi Balogun'; // Mock lookup
+                        });
+                      });
+                    } else if (_isTransfer) {
+                      setState(() { _bankMatched = false; _matchedAccountName = ''; });
+                    }
+                  },
                 ),
-                hint: _isTransfer ? 'Enter 10 digits Account Number' : '@username or Phone',
+                hint: _isTransfer ? 'Enter 10 digit account number' : '@username or Phone',
                 keyboardType: _isTransfer ? TextInputType.number : TextInputType.text,
               ),
               if (_isTransfer) ...[
                 const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: context.theme.colors.background,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: context.theme.colors.border),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Select Bank',
-                        style: Theme.of(
-                          context,
-                        ).textTheme.bodyMedium?.copyWith(color: context.theme.colors.mutedForeground),
+                GestureDetector(
+                  onTap: () async {
+                    final banks = _bankNames;
+                    final picked = await showFSheet<String>(
+                      context: context,
+                      side: FLayout.btt,
+                      builder: (ctx) => SafeArea(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: ctx.theme.colors.background,
+                            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                          ),
+                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Center(child: Container(width:40, height:4, margin: const EdgeInsets.only(bottom:20), decoration: BoxDecoration(color: ctx.theme.colors.border, borderRadius: BorderRadius.circular(2)))),
+                              Text('Select Bank', style: Theme.of(ctx).textTheme.titleMedium?.copyWith(color: ctx.theme.colors.foreground, fontWeight: FontWeight.w600)),
+                              const SizedBox(height: 16),
+                              ...banks.map((b) => GestureDetector(
+                                onTap: () => Navigator.of(ctx).pop(b),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 14),
+                                  child: Row(
+                                    children: [
+                                      Container(width:36, height:36, decoration: BoxDecoration(color: ctx.theme.colors.card, borderRadius: BorderRadius.circular(8), border: Border.all(color: ctx.theme.colors.border)), child: Icon(Icons.account_balance_rounded, color: ctx.theme.colors.primary, size:18)),
+                                      const SizedBox(width:12),
+                                      Text(b, style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(color: ctx.theme.colors.foreground, fontWeight: FontWeight.w500)),
+                                    ],
+                                  ),
+                                ),
+                              )),
+                            ],
+                          ),
+                        ),
                       ),
-                      Icon(Icons.chevron_right_rounded, color: context.theme.colors.mutedForeground),
-                    ],
+                    );
+                    if (picked != null) setState(() { _selectedBank = picked; _bankMatched = false; _matchedAccountName = ''; });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: context.theme.colors.background,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: context.theme.colors.border),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _selectedBank ?? 'Select Bank',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: _selectedBank != null ? context.theme.colors.foreground : context.theme.colors.mutedForeground),
+                        ),
+                        Icon(Icons.chevron_right_rounded, color: context.theme.colors.mutedForeground),
+                      ],
+                    ),
                   ),
+                ),
+                // Animated bank match reveal card
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOutCubic,
+                  child: _bankMatched
+                      ? Container(
+                          margin: const EdgeInsets.only(top: 12),
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF4CAF50).withValues(alpha: 0.08),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: const Color(0xFF4CAF50).withValues(alpha: 0.25)),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.verified_rounded, color: Color(0xFF4CAF50), size: 20),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(_matchedAccountName, style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      color: context.theme.colors.foreground, fontWeight: FontWeight.w700)),
+                                    Text(_matchedBankName, style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: context.theme.colors.mutedForeground)),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : const SizedBox(width: double.infinity),
                 ),
               ],
             ],

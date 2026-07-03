@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
+import 'package:saabi_mobile/features/rounds/ui/sheets/join_circle_sheet.dart';
 import 'package:saabi_mobile/shared/routes/app_router.dart';
 
 /// Rounds tab — Group savings circles (Ajo/Esusu/Adashe)
-class RoundsView extends StatelessWidget {
-  const RoundsView({super.key});
+class RoundsTab extends StatelessWidget {
+  const RoundsTab({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -67,54 +68,57 @@ class _CreateJoinCard extends StatelessWidget {
         children: [
           Text(
             'Savings Circles',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: context.theme.colors.foreground,
-                  fontWeight: FontWeight.w600,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(color: context.theme.colors.foreground, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 8),
           Text(
             'Save together, build trust, and unlock bigger credit limits with your community.',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: context.theme.colors.mutedForeground,
-                ),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.theme.colors.mutedForeground),
           ),
           const SizedBox(height: 16),
           Row(
             children: [
               Expanded(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: context.theme.colors.primary,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    'Create Circle',
-                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          color: context.theme.colors.foreground,
-                          fontWeight: FontWeight.w600,
-                        ),
+                child: GestureDetector(
+                  onTap: () => context.pushNamed(Routes.roundsCreate.name),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: context.theme.colors.primary,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      'Create Circle',
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: context.theme.colors.primaryForeground,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: context.theme.colors.background,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: context.theme.colors.border),
-                  ),
-                  child: Text(
-                    'Join Circle',
-                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          color: context.theme.colors.foreground,
-                          fontWeight: FontWeight.w600,
-                        ),
+                child: GestureDetector(
+                  onTap: () => showJoinCircleSheet(context),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: context.theme.colors.background,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: context.theme.colors.border),
+                    ),
+                    child: Text(
+                      'Join Circle',
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: context.theme.colors.foreground,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -146,10 +150,9 @@ class _ActiveCircleCard extends StatelessWidget {
               children: [
                 Text(
                   'Market Traders Fund',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: context.theme.colors.foreground,
-                        fontWeight: FontWeight.w600,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelLarge?.copyWith(color: context.theme.colors.foreground, fontWeight: FontWeight.w600),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -159,10 +162,9 @@ class _ActiveCircleCard extends StatelessWidget {
                   ),
                   child: Text(
                     'Week 3/10',
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: context.theme.colors.primary,
-                          fontWeight: FontWeight.w600,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.labelSmall?.copyWith(color: context.theme.colors.primary, fontWeight: FontWeight.w600),
                   ),
                 ),
               ],
@@ -176,17 +178,17 @@ class _ActiveCircleCard extends StatelessWidget {
                   children: [
                     Text(
                       'Your Turn',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: context.theme.colors.mutedForeground,
-                          ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: context.theme.colors.mutedForeground),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       'Week 8',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: context.theme.colors.foreground,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        color: context.theme.colors.foreground,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ],
                 ),
@@ -195,17 +197,17 @@ class _ActiveCircleCard extends StatelessWidget {
                   children: [
                     Text(
                       'Pot Size',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: context.theme.colors.mutedForeground,
-                          ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: context.theme.colors.mutedForeground),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       '₦500,000',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: context.theme.colors.foreground,
-                            fontWeight: FontWeight.w600,
-                          ),
+                        color: context.theme.colors.foreground,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),
@@ -227,10 +229,9 @@ class _SectionLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       label,
-      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: context.theme.colors.foreground,
-            fontWeight: FontWeight.w600,
-          ),
+      style: Theme.of(
+        context,
+      ).textTheme.titleSmall?.copyWith(color: context.theme.colors.foreground, fontWeight: FontWeight.w600),
     );
   }
 }
@@ -250,16 +251,12 @@ class _EmptyPastRounds extends StatelessWidget {
               color: context.theme.colors.primary.withValues(alpha: 0.1),
               border: Border.all(color: context.theme.colors.primary.withValues(alpha: 0.2)),
             ),
-            child: Center(
-              child: Icon(Icons.history_rounded, color: context.theme.colors.primary, size: 24),
-            ),
+            child: Center(child: Icon(Icons.history_rounded, color: context.theme.colors.primary, size: 24)),
           ),
           const SizedBox(height: 12),
           Text(
             'No completed rounds yet',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: context.theme.colors.mutedForeground,
-                ),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.theme.colors.mutedForeground),
           ),
         ],
       ),
@@ -336,9 +333,9 @@ class _LiveUpdatesCarouselState extends State<_LiveUpdatesCarousel> {
                   child: Text(
                     _updates[index],
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: context.theme.colors.foreground,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      color: context.theme.colors.foreground,
+                      fontWeight: FontWeight.w500,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),

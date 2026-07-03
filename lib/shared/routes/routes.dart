@@ -17,6 +17,7 @@ enum Routes<In, Out> {
   settings,
   roundsCreate,
   circleDetail,
+  notifications,
 
   // ============================================================================
   // MISC
