@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../app.dart';
+import '../app.dart';
 import '../theme/saabi_theme.dart';
 
 class SaabiNavbar extends StatefulWidget {
