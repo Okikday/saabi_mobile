@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:saabi_mobile/features/transactions/ui/sheets/transaction_flow_sheet.dart';
-import 'package:saabi_mobile/features/saabi_actions/logic/saabi_intent.dart';
+import 'package:saabi_mobile/features/saabi/logic/saabi_intent.dart';
 
 /// Rich detail view for a savings circle.
 class CircleDetailView extends StatelessWidget {

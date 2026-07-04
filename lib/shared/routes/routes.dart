@@ -8,9 +8,11 @@ enum Routes<In, Out> {
   splash,
 
   onboarding,
-  
+
   // Main screen with PageView tabs
   main,
+  saabiTab,
+  homeTab,
 
   // Feature detail screens
   creditDetail,

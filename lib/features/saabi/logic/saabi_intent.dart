@@ -29,3 +29,27 @@ class CreditScoreIntent extends SaabiIntent {
 class CreateRoundIntent extends SaabiIntent {
   const CreateRoundIntent();
 }
+
+/// Represents an intent to check transaction history.
+class TransactionHistoryIntent extends SaabiIntent {
+  final DateTime? date;
+  const TransactionHistoryIntent({this.date});
+}
+
+/// Represents an intent to buy airtime/data.
+class AirtimeIntent extends SaabiIntent {
+  final String? phoneNumber;
+  final double? amount;
+  const AirtimeIntent({this.phoneNumber, this.amount});
+}
+
+/// Represents an intent to check balance.
+class CheckBalanceIntent extends SaabiIntent {
+  const CheckBalanceIntent();
+}
+
+/// Represents an unknown or unsupported intent.
+class UnknownIntent extends SaabiIntent {
+  final String originalText;
+  const UnknownIntent(this.originalText);
+}

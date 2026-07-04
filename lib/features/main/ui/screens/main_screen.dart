@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kickin_utilities/kickin_utilities.dart';
 import 'package:saabi_mobile/core/base/extensions/src/extension_on_provider.dart';
 import 'package:saabi_mobile/features/main/providers/main_pod.dart';
 import 'package:saabi_mobile/features/main/ui/widgets/main_bottom_nav_bar.dart';
-import 'package:saabi_mobile/shared/theme/src/app_colors.dart';
 
 /// Root screen wrapping all 3 main tabs via [PageView].
 ///
@@ -30,7 +33,16 @@ class _MainScreenState extends ConsumerState<MainScreen> with AutomaticKeepAlive
   }
 
   void _pageListener() {
-    MainPod.me.not(ref).setTabIndex(pageController.page?.round() ?? 0);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final isScrolling = pageController.position.isScrollingNotifier.value;
+      final userScrolled = pageController.position.userScrollDirection != ScrollDirection.idle;
+      if (isScrolling && !userScrolled) return;
+
+      final isHalfway = pageController.page != null && pageController.page! % 1 != 0;
+      if (isHalfway && isScrolling && !userScrolled) return;
+
+      MainPod.me.not(ref).setTabIndex(pageController.page?.round() ?? 0);
+    });
   }
 
   @override
@@ -40,46 +52,37 @@ class _MainScreenState extends ConsumerState<MainScreen> with AutomaticKeepAlive
     super.dispose();
   }
 
-  void _animateToTab(int index) {
-    pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 450),
-      curve: Curves.easeInOutCubicEmphasized,
-    );
-  }
+  void _animateToTab(int index) =>
+      pageController.animateToPage(index, duration: 450.inMs, curve: Curves.easeInOutCubicEmphasized);
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
 
-    ref.listen(MainPod.me, (previous, next) {
-      if (previous?.tabIndex != next.tabIndex) {
-        final isScrolling = pageController.position.isScrollingNotifier.value;
-        if (!isScrolling) _animateToTab(next.tabIndex);
-      }
-    });
+    // final tabIndex = MainPod.me.select((s) => s.tabIndex).watch(ref);
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   if (pageController.hasClients && pageController.page?.round() != tabIndex) {
+    //     _animateToTab(tabIndex);
+    //   }
+    // });
 
     final screens = MainPod.me.select((s) => s.screens).watch(ref);
 
     return Scaffold(
-      backgroundColor: AppColors.darkBg,
-      body: PageView(
-        controller: pageController,
-        children: screens,
-      ),
+      body: PageView(controller: pageController, children: screens),
+      extendBody: true,
       bottomNavigationBar: Consumer(
         builder: (context, ref, child) {
           final tabIndex = MainPod.me.select((s) => s.tabIndex).watch(ref);
           return MainBottomNavBar(
             currentIndex: tabIndex,
             onTapItem: (index) {
-              if (MainPod.me.read(ref).tabIndex == index) {
+              if (tabIndex == index) {
                 // Tapping the active tab scrolls to top
-                PrimaryScrollController.of(context).animateTo(
-                  0,
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.easeOutCubic,
-                );
+                PrimaryScrollController.of(
+                  context,
+                ).animateTo(0, duration: 200.inMs, curve: Curves.easeInOutCubicEmphasized);
+                return;
               }
               _animateToTab(index);
               MainPod.me.not(ref).setTabIndex(index);

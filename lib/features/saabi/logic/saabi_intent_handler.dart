@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:saabi_mobile/features/saabi_actions/logic/saabi_intent.dart';
+import 'package:saabi_mobile/features/saabi/logic/saabi_intent.dart';
 import 'package:saabi_mobile/features/transactions/ui/sheets/transaction_flow_sheet.dart';
 
 /// Handles executing [SaabiIntent] actions natively.
@@ -21,6 +21,17 @@ class SaabiIntentHandler {
         break;
       case CreateRoundIntent():
         // Could trigger create round sheet
+        break;
+      case TransactionHistoryIntent():
+        // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Navigating to Transactions...')));
+        break;
+      case AirtimeIntent():
+        // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Opening Airtime Sheet...')));
+        break;
+      case CheckBalanceIntent():
+        // handled internally by chat
+        break;
+      case UnknownIntent():
         break;
     }
   }

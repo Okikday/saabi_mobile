@@ -6,7 +6,7 @@ import 'package:saabi_mobile/features/main/ui/widgets/home/balance_card.dart';
 import 'package:saabi_mobile/features/main/ui/widgets/home/sheets/more_actions_sheet.dart';
 import 'package:saabi_mobile/shared/routes/app_router.dart';
 import 'package:saabi_mobile/features/transactions/ui/sheets/transaction_flow_sheet.dart';
-import 'package:saabi_mobile/features/saabi_actions/logic/saabi_intent.dart';
+import 'package:saabi_mobile/features/saabi/logic/saabi_intent.dart';
 
 /// Home tab — main dashboard surface for Saabi Plus.
 class HomeTab extends StatelessWidget {
@@ -17,12 +17,16 @@ class HomeTab extends StatelessWidget {
     return FScaffold(
       header: FHeader(
         title: const Text('Home'),
+        // style: FHeaderStyleDelta.delta(decoration: DecorationDelta.value(BoxDecoration(color: ))),
         suffixes: [
           FHeaderAction(
-            icon: const Icon(Icons.notifications_outlined),
+            icon: const Icon(HugeIconsStroke.notification01, size: 20),
             onPress: () => Routes.notifications.push(context),
           ),
-          FHeaderAction(icon: const Icon(HugeIconsSolid.settings02), onPress: () => Routes.settings.push(context)),
+          FHeaderAction(
+            icon: const Icon(HugeIconsSolid.settings02, size: 22),
+            onPress: () => Routes.settings.push(context),
+          ),
         ],
       ),
       child: _HomeContent(),
@@ -34,7 +38,7 @@ class _HomeContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -176,7 +180,7 @@ class _CreditScoreBadge extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Credit',
+              'Score',
               style: Theme.of(context).textTheme.labelSmall?.copyWith(color: context.theme.colors.mutedForeground),
             ),
           ],
@@ -260,7 +264,7 @@ class _ActionTile extends StatelessWidget {
 class _RecentTransactionsSection extends StatelessWidget {
   static const _txns = [
     _TxnData(
-      icon: Icons.arrow_upward_rounded,
+      icon: HugeIconsStroke.arrowUpRight01,
       iconColor: Color(0xFFF44336),
       title: 'Transfer to Jane Doe',
       subtitle: 'Nomba Bank • 0123456789',
@@ -269,7 +273,7 @@ class _RecentTransactionsSection extends StatelessWidget {
       isDebit: true,
     ),
     _TxnData(
-      icon: Icons.arrow_downward_rounded,
+      icon: HugeIconsStroke.arrowDown02,
       iconColor: Color(0xFF4CAF50),
       title: 'Received from Mama K',
       subtitle: 'Nomba Bank',
@@ -277,24 +281,24 @@ class _RecentTransactionsSection extends StatelessWidget {
       time: 'Yesterday, 3:14 PM',
       isDebit: false,
     ),
-    _TxnData(
-      icon: Icons.phone_android_rounded,
-      iconColor: Color(0xFF2196F3),
-      title: 'Airtime Purchase',
-      subtitle: 'MTN • 0812 345 6789',
-      amount: '-₦1,000',
-      time: 'Jun 30, 8:00 AM',
-      isDebit: true,
-    ),
-    _TxnData(
-      icon: Icons.savings_rounded,
-      iconColor: Color(0xFF9C27B0),
-      title: 'Circle Contribution',
-      subtitle: 'Market Traders Fund',
-      amount: '-₦20,000',
-      time: 'Jun 29, 9:05 AM',
-      isDebit: true,
-    ),
+    // _TxnData(
+    //   icon: Icons.phone_android_rounded,
+    //   iconColor: Color(0xFF2196F3),
+    //   title: 'Airtime Purchase',
+    //   subtitle: 'MTN • 0812 345 6789',
+    //   amount: '-₦1,000',
+    //   time: 'Jun 30, 8:00 AM',
+    //   isDebit: true,
+    // ),
+    // _TxnData(
+    //   icon: Icons.savings_rounded,
+    //   iconColor: Color(0xFF9C27B0),
+    //   title: 'Circle Contribution',
+    //   subtitle: 'Market Traders Fund',
+    //   amount: '-₦20,000',
+    //   time: 'Jun 29, 9:05 AM',
+    //   isDebit: true,
+    // ),
   ];
 
   @override

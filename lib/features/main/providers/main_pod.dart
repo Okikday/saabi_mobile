@@ -2,19 +2,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:saabi_mobile/features/main/providers/main_state.dart';
 
-final _mainProvider = NotifierProvider(
-  () => MainPod.create(),
-  name: 'MainPod',
-);
+final _mainProvider = NotifierProvider(() => MainPod.create(0), name: 'MainPod');
 
 /// Manages the main shell state — active tab index and initialization.
 class MainPod extends Notifier<MainState> {
   static final me = _mainProvider;
 
-  MainPod.create();
+  final int arg;
+
+  MainPod.create(this.arg);
 
   @override
-  MainState build() => MainState();
+  MainState build() => MainState(tabIndex: arg);
 
   /// Updates the active tab index (no-op if already at [value]).
   void setTabIndex(int value) {

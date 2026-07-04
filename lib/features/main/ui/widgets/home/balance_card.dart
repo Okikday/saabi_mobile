@@ -27,9 +27,11 @@ class BalanceCard extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Total Balance',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.theme.colors.mutedForeground),
+                Expanded(
+                  child: Text(
+                    'Total Balance',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.theme.colors.mutedForeground),
+                  ),
                 ),
                 GestureDetector(
                   onTap: () => ref.read(balanceHiddenProvider.notifier).set(!isHidden),

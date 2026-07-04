@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:forui/forui.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:saabi_mobile/shared/theme/logic/theme_pod.dart';
 
 class SettingsView extends ConsumerWidget {
@@ -14,9 +15,7 @@ class SettingsView extends ConsumerWidget {
     return FScaffold(
       header: FHeader.nested(
         title: const Text('Settings'),
-        prefixes: [
-          FHeaderAction.back(onPress: () => context.pop()),
-        ],
+        prefixes: [FHeaderAction.back(onPress: () => context.pop())],
       ),
       child: ListView(
         padding: const EdgeInsets.all(20),
@@ -24,17 +23,14 @@ class SettingsView extends ConsumerWidget {
           _buildSectionHeader(context, 'Preferences'),
           _buildTile(
             context,
-            icon: Icons.dark_mode_rounded,
+            icon: HugeIconsSolid.moon02,
             title: 'Dark Mode',
-            trailing: FSwitch(
-              value: isDark,
-              onChange: (value) => ref.read(themeModeProvider.notifier).set(value),
-            ),
+            trailing: FSwitch(value: isDark, onChange: (value) => ref.read(themeModeProvider.notifier).set(value)),
           ),
           const SizedBox(height: 12),
           _buildTile(
             context,
-            icon: Icons.notifications_rounded,
+            icon: HugeIconsSolid.notification01,
             title: 'Notifications',
             trailing: Icon(Icons.chevron_right_rounded, color: context.theme.colors.mutedForeground),
           ),
@@ -42,14 +38,14 @@ class SettingsView extends ConsumerWidget {
           _buildSectionHeader(context, 'Account'),
           _buildTile(
             context,
-            icon: Icons.person_rounded,
+            icon: HugeIconsSolid.user03,
             title: 'Profile Information',
             trailing: Icon(Icons.chevron_right_rounded, color: context.theme.colors.mutedForeground),
           ),
           const SizedBox(height: 12),
           _buildTile(
             context,
-            icon: Icons.security_rounded,
+            icon: HugeIconsSolid.shieldKey,
             title: 'Security & PIN',
             trailing: Icon(Icons.chevron_right_rounded, color: context.theme.colors.mutedForeground),
           ),
@@ -57,7 +53,7 @@ class SettingsView extends ConsumerWidget {
           _buildSectionHeader(context, 'Support'),
           _buildTile(
             context,
-            icon: Icons.help_outline_rounded,
+            icon: HugeIconsStroke.chatQuestion01,
             title: 'Help Center',
             trailing: Icon(Icons.chevron_right_rounded, color: context.theme.colors.mutedForeground),
           ),
@@ -71,20 +67,14 @@ class SettingsView extends ConsumerWidget {
       padding: const EdgeInsets.only(bottom: 12, left: 4),
       child: Text(
         title,
-        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: context.theme.colors.primary,
-              fontWeight: FontWeight.w600,
-            ),
+        style: Theme.of(
+          context,
+        ).textTheme.titleSmall?.copyWith(color: context.theme.colors.primary, fontWeight: FontWeight.w600),
       ),
     );
   }
 
-  Widget _buildTile(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required Widget trailing,
-  }) {
+  Widget _buildTile(BuildContext context, {required IconData icon, required String title, required Widget trailing}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -99,9 +89,7 @@ class SettingsView extends ConsumerWidget {
           Expanded(
             child: Text(
               title,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: context.theme.colors.foreground,
-                  ),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.theme.colors.foreground),
             ),
           ),
           trailing,

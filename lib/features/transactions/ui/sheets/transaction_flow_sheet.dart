@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
-import 'package:saabi_mobile/features/saabi_actions/logic/saabi_intent.dart';
+import 'package:saabi_mobile/features/saabi/logic/saabi_intent.dart';
 import 'package:intl/intl.dart';
 
 /// Opens the unified transaction flow bottom sheet.
@@ -206,7 +206,10 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
                         });
                       });
                     } else if (_isTransfer) {
-                      setState(() { _bankMatched = false; _matchedAccountName = ''; });
+                      setState(() {
+                        _bankMatched = false;
+                        _matchedAccountName = '';
+                      });
                     }
                   },
                 ),
@@ -232,28 +235,70 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Center(child: Container(width:40, height:4, margin: const EdgeInsets.only(bottom:20), decoration: BoxDecoration(color: ctx.theme.colors.border, borderRadius: BorderRadius.circular(2)))),
-                              Text('Select Bank', style: Theme.of(ctx).textTheme.titleMedium?.copyWith(color: ctx.theme.colors.foreground, fontWeight: FontWeight.w600)),
-                              const SizedBox(height: 16),
-                              ...banks.map((b) => GestureDetector(
-                                onTap: () => Navigator.of(ctx).pop(b),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 14),
-                                  child: Row(
-                                    children: [
-                                      Container(width:36, height:36, decoration: BoxDecoration(color: ctx.theme.colors.card, borderRadius: BorderRadius.circular(8), border: Border.all(color: ctx.theme.colors.border)), child: Icon(Icons.account_balance_rounded, color: ctx.theme.colors.primary, size:18)),
-                                      const SizedBox(width:12),
-                                      Text(b, style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(color: ctx.theme.colors.foreground, fontWeight: FontWeight.w500)),
-                                    ],
+                              Center(
+                                child: Container(
+                                  width: 40,
+                                  height: 4,
+                                  margin: const EdgeInsets.only(bottom: 20),
+                                  decoration: BoxDecoration(
+                                    color: ctx.theme.colors.border,
+                                    borderRadius: BorderRadius.circular(2),
                                   ),
                                 ),
-                              )),
+                              ),
+                              Text(
+                                'Select Bank',
+                                style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
+                                  color: ctx.theme.colors.foreground,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              ...banks.map(
+                                (b) => GestureDetector(
+                                  onTap: () => Navigator.of(ctx).pop(b),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 14),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 36,
+                                          height: 36,
+                                          decoration: BoxDecoration(
+                                            color: ctx.theme.colors.card,
+                                            borderRadius: BorderRadius.circular(8),
+                                            border: Border.all(color: ctx.theme.colors.border),
+                                          ),
+                                          child: Icon(
+                                            Icons.account_balance_rounded,
+                                            color: ctx.theme.colors.primary,
+                                            size: 18,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Text(
+                                          b,
+                                          style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
+                                            color: ctx.theme.colors.foreground,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
                       ),
                     );
-                    if (picked != null) setState(() { _selectedBank = picked; _bankMatched = false; _matchedAccountName = ''; });
+                    if (picked != null)
+                      setState(() {
+                        _selectedBank = picked;
+                        _bankMatched = false;
+                        _matchedAccountName = '';
+                      });
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -268,7 +313,10 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
                         Text(
                           _selectedBank ?? 'Select Bank',
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: _selectedBank != null ? context.theme.colors.foreground : context.theme.colors.mutedForeground),
+                            color: _selectedBank != null
+                                ? context.theme.colors.foreground
+                                : context.theme.colors.mutedForeground,
+                          ),
                         ),
                         Icon(Icons.chevron_right_rounded, color: context.theme.colors.mutedForeground),
                       ],
@@ -296,10 +344,19 @@ class _TransactionFlowSheetState extends State<TransactionFlowSheet> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(_matchedAccountName, style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                      color: context.theme.colors.foreground, fontWeight: FontWeight.w700)),
-                                    Text(_matchedBankName, style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: context.theme.colors.mutedForeground)),
+                                    Text(
+                                      _matchedAccountName,
+                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                        color: context.theme.colors.foreground,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    Text(
+                                      _matchedBankName,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodySmall?.copyWith(color: context.theme.colors.mutedForeground),
+                                    ),
                                   ],
                                 ),
                               ),

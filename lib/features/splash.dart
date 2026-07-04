@@ -30,7 +30,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await Future<void>.delayed(const Duration(milliseconds: 1500));
       if (!mounted) return;
-      Routes.main.go(rootNavigatorKey.currentContext!);
+      Routes.saabiTab.go(rootNavigatorKey.currentContext!);
     });
   }
 
@@ -62,11 +62,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
                 child: Center(
                   child: Text(
                     'S',
-                    style: TextStyle(
-                      color: context.theme.colors.primary,
-                      fontSize: 32,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: TextStyle(color: context.theme.colors.primary, fontSize: 32, fontWeight: FontWeight.w700),
                   ),
                 ),
               ),
