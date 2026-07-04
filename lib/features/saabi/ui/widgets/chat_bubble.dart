@@ -42,24 +42,44 @@ class _UserBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.centerRight,
-      child: Container(
-        margin: const EdgeInsets.only(left: 48, bottom: 16),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: context.theme.colors.primary,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(16),
-            topRight: Radius.circular(16),
-            bottomLeft: Radius.circular(16),
-            bottomRight: Radius.circular(4),
-          ),
-        ),
-        child: Text(
-          message.text,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: context.theme.colors.primaryForeground,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(left: 48, bottom: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+            decoration: BoxDecoration(
+              color: message.isError ? context.theme.colors.destructive.withValues(alpha: 0.1) : context.theme.colors.primary,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(24),
+                topRight: Radius.circular(24),
+                bottomLeft: Radius.circular(24),
+                bottomRight: Radius.circular(6),
               ),
-        ),
+              border: message.isError ? Border.all(color: context.theme.colors.destructive.withValues(alpha: 0.5)) : null,
+            ),
+            child: Text(
+              message.text,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: message.isError ? context.theme.colors.destructive : context.theme.colors.primaryForeground,
+                  ),
+            ),
+          ),
+          if (message.isError)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.error_outline_rounded, size: 14, color: context.theme.colors.destructive),
+                  const SizedBox(width: 4),
+                  Text('Failed to process', style: Theme.of(context).textTheme.labelSmall?.copyWith(color: context.theme.colors.destructive)),
+                ],
+              ),
+            )
+          else
+            const SizedBox(height: 12),
+        ],
       ),
     );
   }
@@ -82,19 +102,17 @@ class _AssistantBubble extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.only(right: 48, bottom: 16),
-        padding: isAction ? EdgeInsets.zero : const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: isAction
-            ? null
-            : BoxDecoration(
-                color: context.theme.colors.card,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
-                  bottomLeft: Radius.circular(4),
-                  bottomRight: Radius.circular(16),
-                ),
-                border: Border.all(color: context.theme.colors.border),
-              ),
+        padding: isAction ? EdgeInsets.zero : const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+        decoration: BoxDecoration(
+          color: isAction ? Colors.transparent : context.theme.colors.card,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+            bottomLeft: Radius.circular(6),
+            bottomRight: Radius.circular(24),
+          ),
+          border: isAction ? null : Border.all(color: context.theme.colors.border),
+        ),
         child: child,
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:isar_community/isar.dart';
+import 'package:saabi_mobile/features/saabi/providers/models/chat_session_model.dart';
 
 part 'chat_message_model.g.dart';
 
@@ -11,6 +12,8 @@ enum ChatMessageType {
 @collection
 class ChatMessageModel {
   Id id = Isar.autoIncrement;
+
+  final session = IsarLink<ChatSessionModel>();
 
   @Index()
   late String messageId;

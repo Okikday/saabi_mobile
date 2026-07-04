@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:google_mlkit_entity_extraction/google_mlkit_entity_extraction.dart';
 
@@ -20,10 +21,18 @@ class EntityExtractorService {
   late final EntityExtractor _extractor;
   final EntityExtractorModelManager _modelManager = EntityExtractorModelManager();
   bool _isInitialized = false;
+  bool _initFailed = false;
 
   /// Ensures the English model is downloaded and initializes the extractor.
   Future<void> init() async {
-    if (_isInitialized) return;
+    if (_isInitialized || _initFailed) return;
+    
+    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      log('ML Kit is not supported on desktop platforms. Bypassing EntityExtractor initialization.');
+      _isInitialized = true;
+      return;
+    }
+    
     try {
       final modelName = EntityExtractorLanguage.english.name;
       final isDownloaded = await _modelManager.isModelDownloaded(modelName);
@@ -35,17 +44,23 @@ class EntityExtractorService {
       _isInitialized = true;
     } catch (e, st) {
       log('Failed to initialize EntityExtractorService: $e', stackTrace: st);
+      _initFailed = true; // Prevents retrying on every prompt
     }
   }
 
   /// Extracts entities (money, phone, date) from [text].
   Future<ExtractedEntities> extract(String text) async {
-    if (!_isInitialized) {
+    if (!_isInitialized && !_initFailed) {
       log('EntityExtractorService not initialized, calling init()...');
       await init();
     }
 
     if (!_isInitialized) {
+      return const ExtractedEntities();
+    }
+
+    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      // Return empty entities for desktop platforms where ML Kit isn't supported
       return const ExtractedEntities();
     }
 

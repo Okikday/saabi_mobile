@@ -12,8 +12,23 @@ sealed class ChatMessage {
 /// A standard text message sent by the user.
 class UserMessage extends ChatMessage {
   final String text;
+  final bool isError;
 
-  const UserMessage({required super.id, required super.timestamp, required this.text});
+  const UserMessage({
+    required super.id,
+    required super.timestamp,
+    required this.text,
+    this.isError = false,
+  });
+
+  UserMessage copyWith({bool? isError}) {
+    return UserMessage(
+      id: id,
+      timestamp: timestamp,
+      text: text,
+      isError: isError ?? this.isError,
+    );
+  }
 }
 
 /// A simple text response from the Saabi AI assistant.

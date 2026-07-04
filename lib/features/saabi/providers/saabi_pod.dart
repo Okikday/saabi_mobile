@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:isar_community/isar.dart';
 import 'package:saabi_mobile/core/storage/isar/isar_data.dart';
 import 'package:saabi_mobile/features/saabi/providers/models/chat_message.dart';
 import 'package:saabi_mobile/features/saabi/providers/models/chat_message_model.dart';
@@ -53,31 +55,45 @@ class SaabiPod extends Notifier<SaabiState> {
     state = state.copyWith(messages: [...state.messages, userMsg], isProcessing: true);
 
     // 2. Process message
-    if (useBackend) {
-      // Simulate backend delay for now
-      await Future.delayed(const Duration(seconds: 1));
+    try {
+      if (useBackend) {
+        // Simulate backend delay for now
+        await Future.delayed(const Duration(seconds: 1));
 
-      // Fallback stub for online processing
-      final assistantMsg = AssistantTextMessage(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        timestamp: DateTime.now(),
-        text: 'This was routed to the backend. (Backend API not connected yet!)',
+        // Fallback stub for online processing
+        final assistantMsg = AssistantTextMessage(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          timestamp: DateTime.now(),
+          text: 'This was routed to the backend. (Backend API not connected yet!)',
+        );
+        await _persistMessage(assistantMsg);
+        state = state.copyWith(messages: [...state.messages, assistantMsg], isProcessing: false);
+      } else {
+        // Local NLP Processing
+        final intent = await _nlp.parse(text);
+
+        final assistantMsg = AssistantActionMessage(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          timestamp: DateTime.now(),
+          intent: intent,
+          contentBuilder: _buildActionContent,
+        );
+
+        await _persistMessage(assistantMsg);
+        state = state.copyWith(messages: [...state.messages, assistantMsg], isProcessing: false);
+      }
+    } catch (e, st) {
+      debugPrint('Error processing message: $e\n$st');
+      // Mark the user message as failed
+      final failedUserMsg = userMsg.copyWith(isError: true);
+
+      // We don't persist isError to Isar right now, so it will clear on reload,
+      // which is fine for ephemeral failures.
+
+      state = state.copyWith(
+        messages: state.messages.map((m) => m.id == failedUserMsg.id ? failedUserMsg : m).toList(),
+        isProcessing: false,
       );
-      await _persistMessage(assistantMsg);
-      state = state.copyWith(messages: [...state.messages, assistantMsg], isProcessing: false);
-    } else {
-      // Local NLP Processing
-      final intent = await _nlp.parse(text);
-
-      final assistantMsg = AssistantActionMessage(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        timestamp: DateTime.now(),
-        intent: intent,
-        contentBuilder: _buildActionContent,
-      );
-
-      await _persistMessage(assistantMsg);
-      state = state.copyWith(messages: [...state.messages, assistantMsg], isProcessing: false);
     }
   }
 
@@ -119,6 +135,17 @@ class SaabiPod extends Notifier<SaabiState> {
           contentBuilder: _buildActionContent,
         );
     }
+  }
+
+  /// Clears the chat history from state and Isar.
+  Future<void> clearHistory() async {
+    final ids = state.messages.map((m) => int.tryParse(m.id)).whereType<int>().toList();
+    // Clear from Isar
+    final isar = await IsarData.isarFuture;
+    await isar.writeTxn(() => isar.collection<ChatMessageModel>().clear());
+    
+    // Clear from state
+    state = state.copyWith(messages: []);
   }
 
   // ──────────────────────────────────────────────────────────────

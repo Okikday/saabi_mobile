@@ -23,12 +23,12 @@ class _SaabiViewState extends ConsumerState<SaabiView> {
     if (text.trim().isEmpty) return;
     
     _controller.clear();
-    final useBackend = HiveKeys.saabiUseBackend.get();
+    final useBackend = HiveKeys.saabiUseBackend.get() ?? false;
     ref.read(saabiProvider.notifier).submitMessage(text, useBackend: useBackend);
   }
   
   void _submitSuggestion(String text) {
-    final useBackend = HiveKeys.saabiUseBackend.get();
+    final useBackend = HiveKeys.saabiUseBackend.get() ?? false;
     ref.read(saabiProvider.notifier).submitMessage(text, useBackend: useBackend);
   }
 
@@ -44,6 +44,10 @@ class _SaabiViewState extends ConsumerState<SaabiView> {
       header: FHeader(
         title: const Text('Saabi'),
         suffixes: [
+          FHeaderAction(
+            icon: const Icon(Icons.delete_sweep_rounded),
+            onPress: () => ref.read(saabiProvider.notifier).clearHistory(),
+          ),
           FHeaderAction(
             icon: const Icon(Icons.fullscreen_rounded),
             onPress: () {
@@ -264,12 +268,12 @@ class _SaabiFullScreenViewState extends ConsumerState<_SaabiFullScreenView> {
     if (text.trim().isEmpty) return;
     
     _controller.clear();
-    final useBackend = HiveKeys.saabiUseBackend.get();
+    final useBackend = HiveKeys.saabiUseBackend.get() ?? false;
     ref.read(saabiProvider.notifier).submitMessage(text, useBackend: useBackend);
   }
 
   void _submitSuggestion(String text) {
-    final useBackend = HiveKeys.saabiUseBackend.get();
+    final useBackend = HiveKeys.saabiUseBackend.get() ?? false;
     ref.read(saabiProvider.notifier).submitMessage(text, useBackend: useBackend);
   }
   
@@ -322,18 +326,37 @@ class _SaabiFullScreenViewState extends ConsumerState<_SaabiFullScreenView> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: context.theme.colors.border.withValues(alpha: 0.5),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          GestureDetector(
+                            onTap: () => ref.read(saabiProvider.notifier).clearHistory(),
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: context.theme.colors.border.withValues(alpha: 0.5),
+                              ),
+                              child: Center(
+                                child: Icon(Icons.delete_sweep_rounded, color: context.theme.colors.foreground, size: 18),
+                              ),
+                            ),
                           ),
-                          child: Center(
-                            child: Icon(Icons.close_rounded, color: context.theme.colors.foreground, size: 18),
+                          const SizedBox(width: 8),
+                          GestureDetector(
+                            onTap: () => Navigator.of(context).pop(),
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: context.theme.colors.border.withValues(alpha: 0.5),
+                              ),
+                              child: Center(
+                                child: Icon(Icons.close_rounded, color: context.theme.colors.foreground, size: 18),
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   ),

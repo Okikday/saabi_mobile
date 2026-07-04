@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,6 +28,13 @@ class _MainScreenState extends ConsumerState<MainScreen> with AutomaticKeepAlive
   void initState() {
     super.initState();
     pageController.addListener(_pageListener);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final tabIndex = MainPod.me.select((s) => s.tabIndex).read(ref);
+
+      if (pageController.hasClients && pageController.page?.round() != tabIndex) {
+        _animateToTab(tabIndex);
+      }
+    });
   }
 
   void _pageListener() {
@@ -58,13 +63,6 @@ class _MainScreenState extends ConsumerState<MainScreen> with AutomaticKeepAlive
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
-    // final tabIndex = MainPod.me.select((s) => s.tabIndex).watch(ref);
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   if (pageController.hasClients && pageController.page?.round() != tabIndex) {
-    //     _animateToTab(tabIndex);
-    //   }
-    // });
 
     final screens = MainPod.me.select((s) => s.screens).watch(ref);
 
