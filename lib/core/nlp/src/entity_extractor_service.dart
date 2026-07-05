@@ -38,7 +38,7 @@ class EntityExtractorService {
       final isDownloaded = await _modelManager.isModelDownloaded(modelName);
       if (!isDownloaded) {
         log('Downloading ML Kit entity extraction model...');
-        await _modelManager.downloadModel(modelName);
+        await _modelManager.downloadModel(modelName, isWifiRequired: false);
       }
       _extractor = EntityExtractor(language: EntityExtractorLanguage.english);
       _isInitialized = true;
