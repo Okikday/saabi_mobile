@@ -526,23 +526,7 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
               _buildDetailRow('Fee', _currencyFormat.format(fee)),
               _buildDetailRow('VAT', _currencyFormat.format(vat)),
               const Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Divider(height: 24, thickness: 0.5)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Use Cashback',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodyMedium?.copyWith(color: context.theme.colors.mutedForeground),
-                  ),
-                  Text(
-                    'Use ₦51.37 to offset fee',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodyMedium?.copyWith(color: context.theme.colors.primary, fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
+
             ],
           ),
         ),

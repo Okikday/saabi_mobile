@@ -2,6 +2,7 @@ import 'dart:ui' as dart_ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:forui/forui.dart';
+import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:saabi_mobile/shared/components/layout/app_padding.dart';
 import 'package:saabi_mobile/features/saabi/providers/saabi_pod.dart';
 import 'package:saabi_mobile/features/saabi/ui/widgets/chat_bubble.dart';
@@ -46,7 +47,7 @@ class _SaabiViewState extends ConsumerState<SaabiView> {
         title: const Text('Saabi'),
         suffixes: [
           FHeaderAction(
-            icon: const Icon(Icons.add_comment_rounded),
+            icon: const Icon(HugeIconsSolid.chatAdd),
             onPress: () {
               ref.read(saabiProvider.notifier).startNewSession();
             },
@@ -280,6 +281,10 @@ class _ChatInputBar extends StatelessWidget {
               ),
               child: TextField(
                 controller: controller,
+                minLines: 1,
+                maxLines: 4,
+                keyboardType: TextInputType.multiline,
+                textInputAction: TextInputAction.newline,
                 decoration: InputDecoration(
                   hintText: 'Ask Saabi AI…',
                   hintStyle: Theme.of(
@@ -288,7 +293,6 @@ class _ChatInputBar extends StatelessWidget {
                   border: InputBorder.none,
                 ),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.theme.colors.foreground),
-                onSubmitted: (_) => onSubmit(),
               ),
             ),
           ),
@@ -414,7 +418,11 @@ class _SaabiFullScreenViewState extends ConsumerState<_SaabiFullScreenView> {
                                 color: context.theme.colors.border.withValues(alpha: 0.5),
                               ),
                               child: Center(
-                                child: Icon(Icons.add_comment_rounded, color: context.theme.colors.foreground, size: 18),
+                                child: Icon(
+                                  Icons.add_comment_rounded,
+                                  color: context.theme.colors.foreground,
+                                  size: 18,
+                                ),
                               ),
                             ),
                           ),
@@ -422,7 +430,9 @@ class _SaabiFullScreenViewState extends ConsumerState<_SaabiFullScreenView> {
                             const SizedBox(width: 8),
                             GestureDetector(
                               onTap: () async {
-                                await Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SaabiHistoryView()));
+                                await Navigator.of(
+                                  context,
+                                ).push(MaterialPageRoute(builder: (_) => const SaabiHistoryView()));
                                 setState(() {});
                               },
                               child: Container(
