@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,6 +14,7 @@ import 'package:saabi_mobile/features/saabi/ui/widgets/action_cards/action_cards
 import 'package:saabi_mobile/core/storage/hive/hive_keys.dart';
 import 'package:saabi_mobile/features/saabi/providers/models/chat_session_model.dart';
 import 'package:saabi_mobile/features/saabi/providers/models/chat_session.dart';
+import 'package:hugeicons_pro/hugeicons.dart';
 
 final saabiProvider = NotifierProvider<SaabiPod, SaabiState>(SaabiPod.new, name: 'SaabiPod');
 
@@ -41,12 +43,9 @@ class SaabiPod extends Notifier<SaabiState> {
     final persistedSessions = await _sessionIsarData.getAll();
     persistedSessions.sort((a, b) => b.updatedAt.compareTo(a.updatedAt)); // Newest first
 
-    final domainSessions = persistedSessions.map((s) => ChatSession(
-      id: s.sessionId,
-      title: s.title,
-      createdAt: s.createdAt,
-      updatedAt: s.updatedAt,
-    )).toList();
+    final domainSessions = persistedSessions
+        .map((s) => ChatSession(id: s.sessionId, title: s.title, createdAt: s.createdAt, updatedAt: s.updatedAt))
+        .toList();
 
     state = state.copyWith(pastSessions: domainSessions);
 
@@ -56,20 +55,14 @@ class SaabiPod extends Notifier<SaabiState> {
 
   Future<void> loadSession(String sessionId) async {
     final isar = await IsarData.isarFuture;
-    final sessionModel = await isar.collection<ChatSessionModel>()
-        .where()
-        .sessionIdEqualTo(sessionId)
-        .findFirst();
+    final sessionModel = await isar.collection<ChatSessionModel>().where().sessionIdEqualTo(sessionId).findFirst();
 
     if (sessionModel != null) {
       await sessionModel.messages.load();
       final messages = sessionModel.messages.map(_modelToDomain).toList();
       messages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
 
-      state = state.copyWith(
-        currentSessionId: sessionId,
-        messages: messages,
-      );
+      state = state.copyWith(currentSessionId: sessionId, messages: messages);
     }
   }
 
@@ -140,11 +133,11 @@ class SaabiPod extends Notifier<SaabiState> {
     if (!(HiveKeys.saabiSaveHistory.get() ?? true)) return;
 
     final isar = await IsarData.isarFuture;
-    
+
     // Ensure we have a session
     String? sId = state.currentSessionId;
     ChatSessionModel? sessionModel;
-    
+
     if (sId == null) {
       sId = DateTime.now().millisecondsSinceEpoch.toString();
       sessionModel = ChatSessionModel()
@@ -152,7 +145,7 @@ class SaabiPod extends Notifier<SaabiState> {
         ..title = msg is UserMessage ? msg.text : 'New Chat'
         ..createdAt = DateTime.now()
         ..updatedAt = DateTime.now();
-        
+
       // We must notify state immediately so further messages in this burst use the same ID
       // But we will actually dispatch state update in the main submit function usually,
       // here we just update the session locally if needed.
@@ -184,15 +177,15 @@ class SaabiPod extends Notifier<SaabiState> {
     await isar.writeTxn(() async {
       await isar.collection<ChatSessionModel>().put(sessionModel!);
       await isar.collection<ChatMessageModel>().put(model);
-      
+
       model.session.value = sessionModel;
       await model.session.save();
     });
-    
+
     if (state.currentSessionId != sId) {
-       // Refresh sessions list
-       await loadSessions();
-       state = state.copyWith(currentSessionId: sId);
+      // Refresh sessions list
+      await loadSessions();
+      state = state.copyWith(currentSessionId: sId);
     }
   }
 
@@ -222,7 +215,7 @@ class SaabiPod extends Notifier<SaabiState> {
       await isar.collection<ChatMessageModel>().clear();
       await isar.collection<ChatSessionModel>().clear();
     });
-    
+
     // Clear from state
     state = state.copyWith(messages: [], pastSessions: [], currentSessionId: null);
   }
@@ -295,6 +288,52 @@ class SaabiPod extends Notifier<SaabiState> {
       return SendActionCard(intent: intent);
     } else if (intent is CheckBalanceIntent) {
       return const BalanceActionCard();
+    } else if (intent is TransactionHistoryIntent) {
+      return GenericActionCard(
+        intent: intent,
+        title: 'Transaction History',
+        buttonText: 'View Transactions',
+        icon: HugeIconsStroke.calendar01,
+      );
+    } else if (intent is AirtimeIntent) {
+      return GenericActionCard(intent: intent, title: 'Buy Airtime', buttonText: 'Continue', icon: Icons.smartphone);
+    } else if (intent is DataIntent) {
+      return GenericActionCard(intent: intent, title: 'Buy Data', buttonText: 'Continue', icon: HugeIconsStroke.wifi01);
+    } else if (intent is BillsIntent) {
+      return GenericActionCard(
+        intent: intent,
+        title: 'Pay Bills',
+        buttonText: 'View Bills',
+        icon: HugeIconsStroke.invoice01,
+      );
+    } else if (intent is InvestmentIntent) {
+      return GenericActionCard(
+        intent: intent,
+        title: 'Investments',
+        buttonText: 'View Investments',
+        icon: HugeIconsStroke.chartHistogram,
+      );
+    } else if (intent is LoanIntent) {
+      return GenericActionCard(
+        intent: intent,
+        title: 'Request Loan',
+        buttonText: 'View Loans',
+        icon: HugeIconsStroke.bank,
+      );
+    } else if (intent is CreditScoreIntent) {
+      return GenericActionCard(
+        intent: intent,
+        title: 'Credit Score',
+        buttonText: 'View Credit Score',
+        icon: Icons.speed,
+      );
+    } else if (intent is CreateRoundIntent) {
+      return GenericActionCard(
+        intent: intent,
+        title: 'Savings Circle',
+        buttonText: 'Create Circle',
+        icon: HugeIconsStroke.userGroup,
+      );
     } else if (intent is UnknownIntent) {
       return UnknownActionCard(intent: intent);
     }

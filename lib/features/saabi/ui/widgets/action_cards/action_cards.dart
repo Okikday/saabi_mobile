@@ -235,3 +235,56 @@ class _Chip extends StatelessWidget {
     );
   }
 }
+
+/// A generic action card for intents that just need a simple button.
+class GenericActionCard extends StatelessWidget {
+  final SaabiIntent intent;
+  final String title;
+  final String buttonText;
+  final IconData icon;
+
+  const GenericActionCard({
+    super.key,
+    required this.intent,
+    required this.title,
+    required this.buttonText,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: context.theme.colors.card,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: context.theme.colors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: context.theme.colors.primary, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(color: context.theme.colors.foreground, fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: FButton(
+              onPress: () => SaabiIntentHandler.execute(context, intent),
+              child: Text(buttonText),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
