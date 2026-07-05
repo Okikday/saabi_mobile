@@ -36,7 +36,7 @@ final routes = [
   // Notifications
   notificationsRoute.build(),
   // Transaction History
-  transactionHistoryRoute.build(),
+  transactionHistoryRoute,
 ];
 
 

@@ -48,7 +48,7 @@ class TransactionFlowState {
   }
 }
 
-class TransactionFlowPod extends AutoDisposeNotifier<TransactionFlowState> {
+class TransactionFlowPod extends Notifier<TransactionFlowState> {
   @override
   TransactionFlowState build() {
     return const TransactionFlowState();
@@ -111,6 +111,6 @@ class TransactionFlowPod extends AutoDisposeNotifier<TransactionFlowState> {
   }
 }
 
-final transactionFlowProvider = AutoDisposeNotifierProvider<TransactionFlowPod, TransactionFlowState>(
+final transactionFlowProvider = NotifierProvider<TransactionFlowPod, TransactionFlowState>(
   TransactionFlowPod.new,
 );

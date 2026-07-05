@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:saabi_mobile/features/transactions/providers/transaction_flow_pod.dart';
 import 'package:saabi_mobile/features/transactions/ui/sheets/select_bank_sheet.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
-import 'dart:ui';
 
 /// Opens the unified transaction flow bottom sheet.
 Future<void> showTransactionSheet(BuildContext context, {SaabiIntent? initialIntent}) {
@@ -29,7 +28,7 @@ class TransactionFlowSheet extends ConsumerStatefulWidget {
 
 class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
   final NumberFormat _currencyFormat = NumberFormat.currency(locale: 'en_NG', symbol: '₦');
-  
+
   late final TextEditingController _amountController;
   late final TextEditingController _recipientController;
   late final TextEditingController _descController;
@@ -45,23 +44,27 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
       if (widget.initialIntent != null) {
         final intent = widget.initialIntent!;
         if (intent is SendIntent) {
-          ref.read(transactionFlowProvider.notifier).initialize(
-            isTransfer: false, 
-            initialRecipient: intent.recipient, 
-            initialAmount: intent.amount?.toString()
-          );
+          ref
+              .read(transactionFlowProvider.notifier)
+              .initialize(
+                isTransfer: false,
+                initialRecipient: intent.recipient,
+                initialAmount: intent.amount?.toString(),
+              );
           _recipientController.text = intent.recipient ?? '';
           if (intent.amount != null) _amountController.text = intent.amount.toString();
-          
+
           if ((intent.recipient ?? '').isNotEmpty && (intent.amount ?? 0) > 0) {
             ref.read(transactionFlowProvider.notifier).setStep(1);
           }
         } else if (intent is TransferIntent) {
-          ref.read(transactionFlowProvider.notifier).initialize(
-            isTransfer: true, 
-            initialRecipient: intent.accountNumber, 
-            initialAmount: intent.amount?.toString()
-          );
+          ref
+              .read(transactionFlowProvider.notifier)
+              .initialize(
+                isTransfer: true,
+                initialRecipient: intent.accountNumber,
+                initialAmount: intent.amount?.toString(),
+              );
           _recipientController.text = intent.accountNumber ?? '';
           if (intent.amount != null) _amountController.text = intent.amount.toString();
 
@@ -261,9 +264,9 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFF4CAF50).withOpacity(0.1),
+              color: const Color(0xFF4CAF50).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: const Color(0xFF4CAF50).withOpacity(0.3)),
+              border: Border.all(color: const Color(0xFF4CAF50).withValues(alpha: 0.3)),
             ),
             child: Row(
               children: [
@@ -282,9 +285,9 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
                       ),
                       Text(
                         state.matchedBankName,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: context.theme.colors.mutedForeground,
-                        ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodySmall?.copyWith(color: context.theme.colors.mutedForeground),
                       ),
                     ],
                   ),
@@ -341,21 +344,16 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
                     ),
                   ),
                   const SizedBox(width: 4),
-                  IntrinsicWidth(
-                    child: TextField(
-                      controller: _amountController,
+                  Expanded(
+                    child: FTextField(
+                      control: FTextFieldControl.managed(
+                        initial: TextEditingValue(text: state.amount),
+                        onChange: (val) {
+                          ref.read(transactionFlowProvider.notifier).updateAmount(val.text);
+                        },
+                      ),
                       keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                      style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                        color: context.theme.colors.foreground,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: '0.00',
-                      ),
-                      onChanged: (value) {
-                        ref.read(transactionFlowProvider.notifier).updateAmount(value);
-                      },
+                      hint: '0.00',
                     ),
                   ),
                 ],
@@ -363,9 +361,7 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
               const SizedBox(height: 8),
               Text(
                 'Balance: ₦8,268.87',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: context.theme.colors.mutedForeground,
-                ),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.theme.colors.mutedForeground),
               ),
             ],
           ),
@@ -392,14 +388,14 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
           height: 72,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [context.theme.colors.primary, context.theme.colors.primary.withOpacity(0.6)],
+              colors: [context.theme.colors.primary, context.theme.colors.primary.withValues(alpha: 0.6)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: context.theme.colors.primary.withOpacity(0.3),
+                color: context.theme.colors.primary.withValues(alpha: 0.3),
                 blurRadius: 16,
                 offset: const Offset(0, 8),
               ),
@@ -410,17 +406,14 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
         const SizedBox(height: 24),
         Text(
           'What is this for?',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            color: context.theme.colors.foreground,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(color: context.theme.colors.foreground, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Text(
           'Add a note for this transaction (optional)',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: context.theme.colors.mutedForeground,
-          ),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.theme.colors.mutedForeground),
         ),
         const SizedBox(height: 32),
         FTextField(
@@ -447,10 +440,7 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
         const SizedBox(height: 32),
         SizedBox(
           width: double.infinity,
-          child: FButton(
-            onPress: _nextStep,
-            child: const Text('Review Payment'),
-          ),
+          child: FButton(onPress: _nextStep, child: const Text('Review Payment')),
         ),
       ],
     );
@@ -469,16 +459,14 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
         decoration: BoxDecoration(
           color: isSelected ? context.theme.colors.primary : context.theme.colors.card,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: isSelected ? context.theme.colors.primary : context.theme.colors.border,
-          ),
+          border: Border.all(color: isSelected ? context.theme.colors.primary : context.theme.colors.border),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: context.theme.colors.primary.withOpacity(0.2),
+                    color: context.theme.colors.primary.withValues(alpha: 0.2),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
-                  )
+                  ),
                 ]
               : null,
         ),
@@ -505,10 +493,9 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
         const SizedBox(height: 12),
         Text(
           _currencyFormat.format(total),
-          style: Theme.of(context).textTheme.displaySmall?.copyWith(
-            color: context.theme.colors.foreground,
-            fontWeight: FontWeight.w700,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.displaySmall?.copyWith(color: context.theme.colors.foreground, fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 24),
         Container(
@@ -519,7 +506,7 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
             border: Border.all(color: context.theme.colors.border),
             boxShadow: [
               BoxShadow(
-                color: context.theme.colors.border.withOpacity(0.2),
+                color: context.theme.colors.border.withValues(alpha: 0.2),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -534,30 +521,25 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
               ] else ...[
                 _buildDetailRow('Recipient', state.recipient),
               ],
-              if (state.description.isNotEmpty)
-                _buildDetailRow('Description', state.description),
+              if (state.description.isNotEmpty) _buildDetailRow('Description', state.description),
               _buildDetailRow('Amount', _currencyFormat.format(amt)),
               _buildDetailRow('Fee', _currencyFormat.format(fee)),
               _buildDetailRow('VAT', _currencyFormat.format(vat)),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
-                child: Divider(height: 24, thickness: 0.5),
-              ),
+              const Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Divider(height: 24, thickness: 0.5)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'Use Cashback',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: context.theme.colors.mutedForeground,
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: context.theme.colors.mutedForeground),
                   ),
                   Text(
                     'Use ₦51.37 to offset fee',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: context.theme.colors.primary,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: context.theme.colors.primary, fontWeight: FontWeight.w600),
                   ),
                 ],
               ),
@@ -569,10 +551,9 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
           alignment: Alignment.centerLeft,
           child: Text(
             'Payment Method',
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: context.theme.colors.foreground,
-              fontWeight: FontWeight.w600,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleSmall?.copyWith(color: context.theme.colors.foreground, fontWeight: FontWeight.w600),
           ),
         ),
         const SizedBox(height: 12),
@@ -587,7 +568,7 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
             children: [
               CircleAvatar(
                 radius: 18,
-                backgroundColor: context.theme.colors.primary.withOpacity(0.1),
+                backgroundColor: context.theme.colors.primary.withValues(alpha: 0.1),
                 child: Icon(Icons.wallet_rounded, size: 20, color: context.theme.colors.primary),
               ),
               const SizedBox(width: 16),
@@ -603,9 +584,7 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
                   ),
                   Text(
                     _currencyFormat.format(8268.87),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: context.theme.colors.mutedForeground,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.theme.colors.mutedForeground),
                   ),
                 ],
               ),
@@ -636,16 +615,13 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
         children: [
           Text(
             label,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: context.theme.colors.mutedForeground,
-            ),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.theme.colors.mutedForeground),
           ),
           Text(
             value,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: context.theme.colors.foreground,
-              fontWeight: FontWeight.w600,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: context.theme.colors.foreground, fontWeight: FontWeight.w600),
           ),
         ],
       ),

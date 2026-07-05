@@ -902,3 +902,6 @@ class XxxState {
   }
 }
 ```
+
+## UI Widgets Framework
+- ALWAYS prefer using `forui` widgets (like `FTextField`, `FButton`, `FCard`, etc.) over native Flutter Material widgets whenever possible. This prevents layout issues (like `RenderFlex` errors inside forms) and ensures strict alignment with the project's UI design system.

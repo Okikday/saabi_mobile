@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:forui/forui.dart';
 
 class TxnData {
   final IconData icon;
