@@ -13,6 +13,7 @@ import 'src/settings_route.dart';
 import 'src/rounds_create_route.dart';
 import 'src/circle_detail_route.dart';
 import 'src/notifications_route.dart';
+import 'src/transaction_history_route.dart';
 
 export 'package:go_router/go_router.dart';
 
@@ -34,6 +35,8 @@ final routes = [
   circleDetailRoute.build(),
   // Notifications
   notificationsRoute.build(),
+  // Transaction History
+  transactionHistoryRoute.build(),
 ];
 
 

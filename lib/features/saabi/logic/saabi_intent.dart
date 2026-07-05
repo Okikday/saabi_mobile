@@ -33,19 +33,47 @@ class CreateRoundIntent extends SaabiIntent {
 /// Represents an intent to check transaction history.
 class TransactionHistoryIntent extends SaabiIntent {
   final DateTime? date;
-  const TransactionHistoryIntent({this.date});
+  final String? query;
+  const TransactionHistoryIntent({this.date, this.query});
 }
 
-/// Represents an intent to buy airtime/data.
+/// Represents an intent to buy airtime.
 class AirtimeIntent extends SaabiIntent {
   final String? phoneNumber;
   final double? amount;
   const AirtimeIntent({this.phoneNumber, this.amount});
 }
 
+/// Represents an intent to buy data.
+class DataIntent extends SaabiIntent {
+  final String? phoneNumber;
+  const DataIntent({this.phoneNumber});
+}
+
+/// Represents an intent to pay bills.
+class BillsIntent extends SaabiIntent {
+  const BillsIntent();
+}
+
+/// Represents an intent to start an investment.
+class InvestmentIntent extends SaabiIntent {
+  const InvestmentIntent();
+}
+
+/// Represents an intent to request a loan.
+class LoanIntent extends SaabiIntent {
+  const LoanIntent();
+}
+
 /// Represents an intent to check balance.
 class CheckBalanceIntent extends SaabiIntent {
   const CheckBalanceIntent();
+}
+
+/// Represents an intent to verify a receipt.
+class VerifyReceiptIntent extends SaabiIntent {
+  final String? imagePath;
+  const VerifyReceiptIntent({this.imagePath});
 }
 
 /// Represents an unknown or unsupported intent.

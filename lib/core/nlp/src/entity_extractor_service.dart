@@ -59,9 +59,33 @@ class EntityExtractorService {
       return const ExtractedEntities();
     }
 
-    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
-      // Return empty entities for desktop platforms where ML Kit isn't supported
-      return const ExtractedEntities();
+    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux || _initFailed) {
+      // Lightweight regex fallback for desktop testing
+      double? money;
+      String? phone;
+
+      // Extract 10-digit account/phone numbers, possibly prefixed by "to "
+      final toAccountMatch = RegExp(r'to\s+(\d{10})', caseSensitive: false).firstMatch(text);
+      if (toAccountMatch != null) {
+        phone = toAccountMatch.group(1);
+      } else {
+        final accountMatch = RegExp(r'\b(\d{10})\b').firstMatch(text);
+        if (accountMatch != null) {
+          phone = accountMatch.group(1);
+        }
+      }
+
+      // Extract amount: find a number that isn't the phone/account number we just found
+      final allNumbers = RegExp(r'\b\d+(?:\.\d+)?\b').allMatches(text);
+      for (final match in allNumbers) {
+        final val = match.group(0);
+        if (val != null && val != phone) {
+          money = double.tryParse(val);
+          if (money != null) break;
+        }
+      }
+
+      return ExtractedEntities(moneyAmount: money, phoneNumber: phone, date: null);
     }
 
     try {

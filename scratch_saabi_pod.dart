@@ -10,9 +10,6 @@ import 'package:saabi_mobile/features/saabi/providers/saabi_state.dart';
 import 'package:saabi_mobile/core/nlp/nlp.dart';
 import 'package:saabi_mobile/features/saabi/logic/saabi_intent.dart';
 import 'package:saabi_mobile/features/saabi/ui/widgets/action_cards/action_cards.dart';
-import 'package:saabi_mobile/core/storage/hive/hive_keys.dart';
-import 'package:saabi_mobile/features/saabi/providers/models/chat_session_model.dart';
-import 'package:saabi_mobile/features/saabi/providers/models/chat_session.dart';
 
 final saabiProvider = NotifierProvider<SaabiPod, SaabiState>(SaabiPod.new, name: 'SaabiPod');
 
@@ -21,7 +18,6 @@ class SaabiPod extends Notifier<SaabiState> {
 
   final _nlp = SaabiNlp();
   final _isarData = IsarData.instance<ChatMessageModel>();
-  final _sessionIsarData = IsarData.instance<ChatSessionModel>();
 
   @override
   SaabiState build() {
@@ -33,48 +29,14 @@ class SaabiPod extends Notifier<SaabiState> {
     // 1. Initialize NLP (downloads model if needed)
     await _nlp.init();
 
-    // 2. Load persisted sessions
-    await loadSessions();
-  }
+    // 2. Load persisted messages
+    final persisted = await _isarData.getAll();
+    final messages = persisted.map(_modelToDomain).toList();
 
-  Future<void> loadSessions() async {
-    final persistedSessions = await _sessionIsarData.getAll();
-    persistedSessions.sort((a, b) => b.updatedAt.compareTo(a.updatedAt)); // Newest first
+    // Sort by timestamp just in case
+    messages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
 
-    final domainSessions = persistedSessions.map((s) => ChatSession(
-      id: s.sessionId,
-      title: s.title,
-      createdAt: s.createdAt,
-      updatedAt: s.updatedAt,
-    )).toList();
-
-    state = state.copyWith(pastSessions: domainSessions);
-
-    // If there is a very recent session (e.g. today), we could load it.
-    // For now, we will start fresh until the user picks a session or types.
-  }
-
-  Future<void> loadSession(String sessionId) async {
-    final isar = await IsarData.isarFuture;
-    final sessionModel = await isar.collection<ChatSessionModel>()
-        .where()
-        .sessionIdEqualTo(sessionId)
-        .findFirst();
-
-    if (sessionModel != null) {
-      await sessionModel.messages.load();
-      final messages = sessionModel.messages.map(_modelToDomain).toList();
-      messages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
-
-      state = state.copyWith(
-        currentSessionId: sessionId,
-        messages: messages,
-      );
-    }
-  }
-
-  void startNewSession() {
-    state = state.copyWith(currentSessionId: null, messages: []);
+    state = state.copyWith(messages: messages);
   }
 
   /// Called when the user submits a message in the chat input.
@@ -137,34 +99,6 @@ class SaabiPod extends Notifier<SaabiState> {
 
   /// Helper to convert Domain message -> Isar model and save it
   Future<void> _persistMessage(ChatMessage msg) async {
-    if (!(HiveKeys.saabiSaveHistory.get() ?? true)) return;
-
-    final isar = await IsarData.isarFuture;
-    
-    // Ensure we have a session
-    String? sId = state.currentSessionId;
-    ChatSessionModel? sessionModel;
-    
-    if (sId == null) {
-      sId = DateTime.now().millisecondsSinceEpoch.toString();
-      sessionModel = ChatSessionModel()
-        ..sessionId = sId
-        ..title = msg is UserMessage ? msg.text : 'New Chat'
-        ..createdAt = DateTime.now()
-        ..updatedAt = DateTime.now();
-        
-      // We must notify state immediately so further messages in this burst use the same ID
-      // But we will actually dispatch state update in the main submit function usually,
-      // here we just update the session locally if needed.
-    } else {
-      sessionModel = await isar.collection<ChatSessionModel>().where().sessionIdEqualTo(sId).findFirst();
-      if (sessionModel != null) {
-        sessionModel.updatedAt = DateTime.now();
-      }
-    }
-
-    if (sessionModel == null) return;
-
     final model = ChatMessageModel()
       ..messageId = msg.id
       ..timestamp = msg.timestamp;
@@ -178,22 +112,11 @@ class SaabiPod extends Notifier<SaabiState> {
     } else if (msg is AssistantActionMessage) {
       model.type = ChatMessageType.assistantAction;
       model.intentType = msg.intent.runtimeType.toString();
+      // Store intent data via a simple serialization
       model.intentData = _serializeIntent(msg.intent);
     }
 
-    await isar.writeTxn(() async {
-      await isar.collection<ChatSessionModel>().put(sessionModel!);
-      await isar.collection<ChatMessageModel>().put(model);
-      
-      model.session.value = sessionModel;
-      await model.session.save();
-    });
-    
-    if (state.currentSessionId != sId) {
-       // Refresh sessions list
-       await loadSessions();
-       state = state.copyWith(currentSessionId: sId);
-    }
+    await _isarData.store(model);
   }
 
   /// Helper to convert Isar model -> Domain message
@@ -216,15 +139,13 @@ class SaabiPod extends Notifier<SaabiState> {
 
   /// Clears the chat history from state and Isar.
   Future<void> clearHistory() async {
+    final ids = state.messages.map((m) => int.tryParse(m.id)).whereType<int>().toList();
     // Clear from Isar
     final isar = await IsarData.isarFuture;
-    await isar.writeTxn(() async {
-      await isar.collection<ChatMessageModel>().clear();
-      await isar.collection<ChatSessionModel>().clear();
-    });
+    await isar.writeTxn(() => isar.collection<ChatMessageModel>().clear());
     
     // Clear from state
-    state = state.copyWith(messages: [], pastSessions: [], currentSessionId: null);
+    state = state.copyWith(messages: []);
   }
 
   // ──────────────────────────────────────────────────────────────

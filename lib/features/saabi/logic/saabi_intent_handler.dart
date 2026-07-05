@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:saabi_mobile/features/saabi/logic/saabi_intent.dart';
 import 'package:saabi_mobile/features/transactions/ui/sheets/transaction_flow_sheet.dart';
+import 'package:saabi_mobile/shared/routes/app_router.dart';
 
 /// Handles executing [SaabiIntent] actions natively.
 class SaabiIntentHandler {
@@ -22,11 +23,26 @@ class SaabiIntentHandler {
       case CreateRoundIntent():
         // Could trigger create round sheet
         break;
-      case TransactionHistoryIntent():
-        // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Navigating to Transactions...')));
+      case TransactionHistoryIntent(query: final query):
+        Routes.transactionHistory.push(context, extra: query);
+        break;
+      case VerifyReceiptIntent():
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Navigating to Transactions...')));
         break;
       case AirtimeIntent():
-        // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Opening Airtime Sheet...')));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Opening Airtime Sheet...')));
+        break;
+      case DataIntent():
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Opening Data Sheet...')));
+        break;
+      case BillsIntent():
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Opening Bills Sheet...')));
+        break;
+      case InvestmentIntent():
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Opening Investment Page...')));
+        break;
+      case LoanIntent():
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Opening Loans Page...')));
         break;
       case CheckBalanceIntent():
         // handled internally by chat

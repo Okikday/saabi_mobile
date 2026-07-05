@@ -7,6 +7,7 @@ import 'package:saabi_mobile/features/main/ui/widgets/home/sheets/more_actions_s
 import 'package:saabi_mobile/shared/routes/app_router.dart';
 import 'package:saabi_mobile/features/transactions/ui/sheets/transaction_flow_sheet.dart';
 import 'package:saabi_mobile/features/saabi/logic/saabi_intent.dart';
+import 'package:saabi_mobile/features/transactions/ui/widgets/txn_tile.dart';
 
 /// Home tab — main dashboard surface for Saabi Plus.
 class HomeTab extends StatelessWidget {
@@ -263,7 +264,7 @@ class _ActionTile extends StatelessWidget {
 
 class _RecentTransactionsSection extends StatelessWidget {
   static const _txns = [
-    _TxnData(
+    TxnData(
       icon: HugeIconsStroke.arrowUpRight01,
       iconColor: Color(0xFFF44336),
       title: 'Transfer to Jane Doe',
@@ -272,7 +273,7 @@ class _RecentTransactionsSection extends StatelessWidget {
       time: 'Today, 10:42 AM',
       isDebit: true,
     ),
-    _TxnData(
+    TxnData(
       icon: HugeIconsStroke.arrowDown02,
       iconColor: Color(0xFF4CAF50),
       title: 'Received from Mama K',
@@ -281,24 +282,6 @@ class _RecentTransactionsSection extends StatelessWidget {
       time: 'Yesterday, 3:14 PM',
       isDebit: false,
     ),
-    // _TxnData(
-    //   icon: Icons.phone_android_rounded,
-    //   iconColor: Color(0xFF2196F3),
-    //   title: 'Airtime Purchase',
-    //   subtitle: 'MTN • 0812 345 6789',
-    //   amount: '-₦1,000',
-    //   time: 'Jun 30, 8:00 AM',
-    //   isDebit: true,
-    // ),
-    // _TxnData(
-    //   icon: Icons.savings_rounded,
-    //   iconColor: Color(0xFF9C27B0),
-    //   title: 'Circle Contribution',
-    //   subtitle: 'Market Traders Fund',
-    //   amount: '-₦20,000',
-    //   time: 'Jun 29, 9:05 AM',
-    //   isDebit: true,
-    // ),
   ];
 
   @override
@@ -316,7 +299,10 @@ class _RecentTransactionsSection extends StatelessWidget {
               ).textTheme.titleSmall?.copyWith(color: context.theme.colors.foreground, fontWeight: FontWeight.w600),
             ),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                // Navigate to TransactionHistoryScreen
+                Routes.transactionHistory.push(context);
+              },
               child: Text(
                 'See all',
                 style: Theme.of(
@@ -337,7 +323,7 @@ class _RecentTransactionsSection extends StatelessWidget {
             children: List.generate(_txns.length, (i) {
               return Column(
                 children: [
-                  _TxnTile(data: _txns[i]),
+                  TxnTile(data: _txns[i]),
                   if (i < _txns.length - 1)
                     Divider(height: 0, thickness: 0.5, indent: 60, color: context.theme.colors.border),
                 ],
@@ -350,82 +336,4 @@ class _RecentTransactionsSection extends StatelessWidget {
   }
 }
 
-class _TxnData {
-  final IconData icon;
-  final Color iconColor;
-  final String title;
-  final String subtitle;
-  final String amount;
-  final String time;
-  final bool isDebit;
-  const _TxnData({
-    required this.icon,
-    required this.iconColor,
-    required this.title,
-    required this.subtitle,
-    required this.amount,
-    required this.time,
-    required this.isDebit,
-  });
-}
-
-class _TxnTile extends StatelessWidget {
-  const _TxnTile({required this.data});
-  final _TxnData data;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: data.iconColor.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(data.icon, color: data.iconColor, size: 20),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  data.title,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyMedium?.copyWith(color: context.theme.colors.foreground, fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  data.subtitle,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(color: context.theme.colors.mutedForeground),
-                ),
-              ],
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                data.amount,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: data.isDebit ? const Color(0xFFF44336) : const Color(0xFF4CAF50),
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                data.time,
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(color: context.theme.colors.mutedForeground),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
+// The _TxnData and _TxnTile classes have been extracted to lib/features/transactions/ui/widgets/txn_tile.dart

@@ -6,6 +6,7 @@ enum HiveKeys<T> {
   themeMode<bool>(),
   balanceHidden<bool>(),
   saabiUseBackend<bool>(),
+  saabiSaveHistory<bool>(),
 }
 
 extension HiveKeysExtension<T> on HiveKeys<T> {

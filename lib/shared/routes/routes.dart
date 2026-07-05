@@ -20,6 +20,7 @@ enum Routes<In, Out> {
   roundsCreate,
   circleDetail,
   notifications,
+  transactionHistory,
 
   // ============================================================================
   // MISC

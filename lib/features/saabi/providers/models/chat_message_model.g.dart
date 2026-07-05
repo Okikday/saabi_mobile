@@ -79,7 +79,14 @@ const ChatMessageModelSchema = CollectionSchema(
       ],
     ),
   },
-  links: {},
+  links: {
+    r'session': LinkSchema(
+      id: 9202757898797590454,
+      name: r'session',
+      target: r'ChatSessionModel',
+      single: true,
+    ),
+  },
   embeddedSchemas: {},
 
   getId: _chatMessageModelGetId,
@@ -194,7 +201,7 @@ Id _chatMessageModelGetId(ChatMessageModel object) {
 }
 
 List<IsarLinkBase<dynamic>> _chatMessageModelGetLinks(ChatMessageModel object) {
-  return [];
+  return [object.session];
 }
 
 void _chatMessageModelAttach(
@@ -203,6 +210,12 @@ void _chatMessageModelAttach(
   ChatMessageModel object,
 ) {
   object.id = id;
+  object.session.attach(
+    col,
+    col.isar.collection<ChatSessionModel>(),
+    r'session',
+    id,
+  );
 }
 
 extension ChatMessageModelQueryWhereSort
@@ -1320,7 +1333,21 @@ extension ChatMessageModelQueryObject
     on QueryBuilder<ChatMessageModel, ChatMessageModel, QFilterCondition> {}
 
 extension ChatMessageModelQueryLinks
-    on QueryBuilder<ChatMessageModel, ChatMessageModel, QFilterCondition> {}
+    on QueryBuilder<ChatMessageModel, ChatMessageModel, QFilterCondition> {
+  QueryBuilder<ChatMessageModel, ChatMessageModel, QAfterFilterCondition>
+  session(FilterQuery<ChatSessionModel> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'session');
+    });
+  }
+
+  QueryBuilder<ChatMessageModel, ChatMessageModel, QAfterFilterCondition>
+  sessionIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'session', 0, true, 0, true);
+    });
+  }
+}
 
 extension ChatMessageModelQuerySortBy
     on QueryBuilder<ChatMessageModel, ChatMessageModel, QSortBy> {
