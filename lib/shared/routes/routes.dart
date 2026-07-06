@@ -17,6 +17,9 @@ enum Routes<In, Out> {
   // Feature detail screens
   creditDetail,
   settings,
+  securitySettings,
+  pinSetup,
+  automationsView,
   roundsCreate,
   circleDetail,
   notifications,

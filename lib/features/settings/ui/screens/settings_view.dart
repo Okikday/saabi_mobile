@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:forui/forui.dart';
-import 'package:go_router/go_router.dart';
+import 'package:saabi_mobile/shared/routes/app_router.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:saabi_mobile/shared/theme/logic/theme_pod.dart';
 import 'package:saabi_mobile/features/saabi/providers/live_assist_pod.dart' as saabi_live;
@@ -48,6 +48,7 @@ class SettingsView extends ConsumerWidget {
             context,
             icon: HugeIconsSolid.shieldKey,
             title: 'Security & PIN',
+            onTap: () => Routes.securitySettings.push(context),
             trailing: Icon(Icons.chevron_right_rounded, color: context.theme.colors.mutedForeground),
           ),
           const SizedBox(height: 24),
@@ -60,6 +61,14 @@ class SettingsView extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
           _buildSectionHeader(context, 'Experimental Features'),
+          _buildTile(
+            context,
+            icon: HugeIconsStroke.workflowCircle01,
+            title: 'Live Automations',
+            onTap: () => Routes.automationsView.push(context),
+            trailing: Icon(Icons.chevron_right_rounded, color: context.theme.colors.mutedForeground),
+          ),
+          const SizedBox(height: 12),
           Consumer(
             builder: (context, ref, _) {
               final liveState = ref.watch(saabi_live.liveAssistProvider);
@@ -107,26 +116,35 @@ class SettingsView extends ConsumerWidget {
     );
   }
 
-  Widget _buildTile(BuildContext context, {required IconData icon, required String title, required Widget trailing}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: context.theme.colors.card,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: context.theme.colors.border),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: context.theme.colors.mutedForeground, size: 22),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.theme.colors.foreground),
+  Widget _buildTile(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required Widget trailing,
+    VoidCallback? onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: context.theme.colors.card,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: context.theme.colors.border),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: context.theme.colors.mutedForeground, size: 22),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.theme.colors.foreground),
+              ),
             ),
-          ),
-          trailing,
-        ],
+            trailing,
+          ],
+        ),
       ),
     );
   }

@@ -44,7 +44,7 @@ class _CircleDetailContent extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: FButton(
-              onPress: () => showTransactionSheet(context, initialIntent: const TransferIntent(amount: 20000.0)),
+              onPress: () => showTransactionSheet(context, initialIntent: TransferIntent(amount: 20000.0)),
               child: const Text('Contribute Now'),
             ),
           ),
@@ -84,6 +84,7 @@ class _CircleHeroCard extends StatelessWidget {
                   ).textTheme.titleLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
                 ),
               ),
+              // Stats
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(

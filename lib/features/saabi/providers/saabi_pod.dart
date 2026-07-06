@@ -239,7 +239,7 @@ class SaabiPod extends Notifier<SaabiState> {
   }
 
   SaabiIntent _deserializeIntent(String? type, String? data) {
-    if (data == null || data.isEmpty) return const UnknownIntent('');
+    if (data == null || data.isEmpty) return UnknownIntent('');
 
     try {
       final map = jsonDecode(data) as Map<String, dynamic>;
@@ -260,17 +260,17 @@ class SaabiPod extends Notifier<SaabiState> {
         case 'AirtimeIntent':
           return AirtimeIntent(amount: map['amount'] as double?, phoneNumber: map['phoneNumber'] as String?);
         case 'CreditScoreIntent':
-          return const CreditScoreIntent();
+          return CreditScoreIntent();
         case 'CheckBalanceIntent':
-          return const CheckBalanceIntent();
+          return CheckBalanceIntent();
         case 'CreateRoundIntent':
-          return const CreateRoundIntent();
+          return CreateRoundIntent();
         case 'UnknownIntent':
         default:
           return UnknownIntent(map['text'] as String? ?? '');
       }
     } catch (_) {
-      return const UnknownIntent('Failed to parse past intent');
+      return UnknownIntent('Failed to parse past intent');
     }
   }
 
@@ -344,6 +344,14 @@ class SaabiPod extends Notifier<SaabiState> {
         subtitle: 'Check your borrowing power',
         buttonText: 'View Credit Score',
         icon: Icons.speed,
+      );
+    } else if (intent is VerifyReceiptIntent) {
+      return GenericActionCard(
+        intent: intent,
+        title: 'Verify Receipt',
+        subtitle: intent.query != null ? 'Search for "${intent.query}"' : 'Share or check a receipt',
+        buttonText: 'Open Receipts',
+        icon: Icons.receipt,
       );
     } else if (intent is CreateRoundIntent) {
       return GenericActionCard(

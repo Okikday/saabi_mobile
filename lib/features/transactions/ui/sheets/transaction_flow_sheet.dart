@@ -8,11 +8,12 @@ import 'package:saabi_mobile/features/transactions/ui/sheets/select_bank_sheet.d
 import 'package:hugeicons_pro/hugeicons.dart';
 
 /// Opens the unified transaction flow bottom sheet.
-Future<void> showTransactionSheet(BuildContext context, {SaabiIntent? initialIntent}) {
+Future<bool?> showTransactionSheet(BuildContext context, {SaabiIntent? initialIntent}) {
   return showFSheet(
     context: context,
     side: FLayout.btt,
     mainAxisMaxRatio: 8.5 / 10,
+    resizeToAvoidBottomInset: false,
     builder: (context) => TransactionFlowSheet(initialIntent: initialIntent),
   );
 }
@@ -32,6 +33,10 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
   late final TextEditingController _amountController;
   late final TextEditingController _recipientController;
   late final TextEditingController _descController;
+  
+  late final FocusNode _recipientFocus;
+  late final FocusNode _amountFocus;
+  late final FocusNode _descFocus;
 
   @override
   void initState() {
@@ -39,6 +44,10 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
     _amountController = TextEditingController();
     _recipientController = TextEditingController();
     _descController = TextEditingController();
+    
+    _recipientFocus = FocusNode();
+    _amountFocus = FocusNode();
+    _descFocus = FocusNode();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.initialIntent != null) {
@@ -50,15 +59,20 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
                 isTransfer: false,
                 initialRecipient: intent.recipient,
                 initialAmount: intent.amount?.toString(),
+                initialDescription: intent.description,
               );
           _recipientController.text = intent.recipient ?? '';
           if (intent.amount != null) _amountController.text = intent.amount.toString();
+          if (intent.description != null) _descController.text = intent.description!;
 
           if ((intent.recipient ?? '').isNotEmpty) {
             ref.read(transactionFlowProvider.notifier).updateRecipient(intent.recipient!);
           }
           if (intent.amount != null) {
             ref.read(transactionFlowProvider.notifier).updateAmount(intent.amount.toString());
+          }
+          if (intent.description != null) {
+            ref.read(transactionFlowProvider.notifier).updateDescription(intent.description!);
           }
 
           if ((intent.recipient ?? '').isNotEmpty && (intent.amount ?? 0) > 0) {
@@ -71,9 +85,11 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
                 isTransfer: true,
                 initialRecipient: intent.accountNumber,
                 initialAmount: intent.amount?.toString(),
+                initialDescription: intent.description,
               );
           _recipientController.text = intent.accountNumber ?? '';
           if (intent.amount != null) _amountController.text = intent.amount.toString();
+          if (intent.description != null) _descController.text = intent.description!;
 
           if ((intent.accountNumber ?? '').isNotEmpty) {
             ref.read(transactionFlowProvider.notifier).updateRecipient(intent.accountNumber!);
@@ -81,12 +97,18 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
           if (intent.amount != null) {
             ref.read(transactionFlowProvider.notifier).updateAmount(intent.amount.toString());
           }
+          if (intent.description != null) {
+            ref.read(transactionFlowProvider.notifier).updateDescription(intent.description!);
+          }
 
           if ((intent.accountNumber ?? '').isNotEmpty && (intent.amount ?? 0) > 0) {
             ref.read(transactionFlowProvider.notifier).setStep(1);
           }
         }
       }
+      
+      final state = ref.read(transactionFlowProvider);
+      _focusForStep(state.currentStep);
     });
   }
 
@@ -95,6 +117,9 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
     _amountController.dispose();
     _recipientController.dispose();
     _descController.dispose();
+    _recipientFocus.dispose();
+    _amountFocus.dispose();
+    _descFocus.dispose();
     super.dispose();
   }
 
@@ -102,6 +127,7 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
     final state = ref.read(transactionFlowProvider);
     if (state.currentStep < 3) {
       ref.read(transactionFlowProvider.notifier).nextStep();
+      _focusForStep(state.currentStep + 1);
     } else {
       Navigator.of(context).pop();
     }
@@ -128,12 +154,33 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
     final state = ref.read(transactionFlowProvider);
     if (state.currentStep > 0) {
       ref.read(transactionFlowProvider.notifier).prevStep();
+      _focusForStep(state.currentStep - 1);
     } else {
       final shouldPop = await _onWillPop();
       if (shouldPop && mounted) {
         Navigator.of(context).pop();
       }
     }
+  }
+
+  void _focusForStep(int step) {
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (!mounted) return;
+      switch (step) {
+        case 0:
+          _recipientFocus.requestFocus();
+          break;
+        case 1:
+          _amountFocus.requestFocus();
+          break;
+        case 2:
+          _descFocus.requestFocus();
+          break;
+        default:
+          FocusScope.of(context).unfocus();
+          break;
+      }
+    });
   }
 
   @override
@@ -251,6 +298,8 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
               ),
               const SizedBox(height: 12),
               FTextField(
+                autofocus: true,
+                focusNode: _recipientFocus,
                 control: FTextFieldControl.managed(
                   initial: TextEditingValue(text: state.recipient),
                   onChange: (value) {
@@ -387,6 +436,8 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
                   const SizedBox(width: 4),
                   Expanded(
                     child: FTextField(
+                      autofocus: true,
+                      focusNode: _amountFocus,
                       control: FTextFieldControl.managed(
                         initial: TextEditingValue(text: state.amount),
                         onChange: (val) {
@@ -458,6 +509,8 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
         ),
         const SizedBox(height: 32),
         FTextField(
+          autofocus: true,
+          focusNode: _descFocus,
           control: FTextFieldControl.managed(
             initial: TextEditingValue(text: state.description),
             onChange: (val) {
@@ -622,7 +675,7 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
           width: double.infinity,
           child: FButton(
             onPress: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(true);
             },
             child: const Text('Pay Securely'),
           ),

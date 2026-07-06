@@ -3,6 +3,7 @@ import 'package:forui/forui.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
 
 import 'package:saabi_mobile/features/transactions/ui/widgets/txn_tile.dart';
+import 'package:saabi_mobile/features/transactions/ui/screens/transaction_detail_screen.dart';
 
 class TransactionHistoryScreen extends StatefulWidget {
   const TransactionHistoryScreen({super.key, this.initialSearchQuery});
@@ -18,6 +19,16 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   
   // Mock transactions based on home_tab
   final List<TxnData> _allTxns = [
+    const TxnData(
+      icon: HugeIconsStroke.time01,
+      iconColor: Color(0xFFF57C00),
+      title: 'Automated Forwarding (Pending)',
+      subtitle: 'To Babatunde • Scheduled in 2 mins',
+      amount: '-₦10,000',
+      time: 'Just now',
+      isDebit: true,
+      status: 'Pending',
+    ),
     const TxnData(
       icon: HugeIconsStroke.arrowUpRight01,
       iconColor: Color(0xFFF44336),
@@ -60,6 +71,18 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   void initState() {
     super.initState();
     _searchController = TextEditingController(text: widget.initialSearchQuery);
+    
+    if (widget.initialSearchQuery != null && widget.initialSearchQuery!.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_filteredTxns.length == 1 && mounted) {
+           Navigator.of(context).push(
+             MaterialPageRoute(
+               builder: (ctx) => TransactionDetailScreen(txn: _filteredTxns.first),
+             )
+           );
+        }
+      });
+    }
   }
 
   @override

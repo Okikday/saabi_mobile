@@ -58,11 +58,13 @@ class TransactionFlowPod extends Notifier<TransactionFlowState> {
     required bool isTransfer,
     String? initialRecipient,
     String? initialAmount,
+    String? initialDescription,
   }) {
     state = state.copyWith(
       isTransfer: isTransfer,
       recipient: initialRecipient ?? '',
       amount: initialAmount ?? '',
+      description: initialDescription ?? '',
     );
   }
 

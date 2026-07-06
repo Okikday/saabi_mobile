@@ -107,6 +107,28 @@ class EntityExtractorService {
             phone = entity.rawValue;
           } else if (entity is DateTimeEntity && date == null) {
              date = DateTime.fromMillisecondsSinceEpoch(entity.timestamp);
+          } else if (entity is TrackingNumberEntity && phone == null) {
+            // NUBAN account numbers are 10 digits and sometimes recognized as tracking numbers
+            if (RegExp(r'^\d{10}$').hasMatch(entity.rawValue)) {
+              phone = entity.rawValue;
+            }
+          } else if (entity.type.index == 8 && phone == null) {
+             if (RegExp(r'^\d{10}$').hasMatch(entity.rawValue)) {
+              phone = entity.rawValue;
+            }
+          }
+        }
+      }
+
+      // Robust fallback for Nigerian Account numbers (10 digits) or Phone numbers (11 digits)
+      if (phone == null) {
+        final toAccountMatch = RegExp(r'to\s+(\d{10,11})', caseSensitive: false).firstMatch(text);
+        if (toAccountMatch != null) {
+          phone = toAccountMatch.group(1);
+        } else {
+          final accountMatch = RegExp(r'\b(\d{10,11})\b').firstMatch(text);
+          if (accountMatch != null) {
+            phone = accountMatch.group(1);
           }
         }
       }

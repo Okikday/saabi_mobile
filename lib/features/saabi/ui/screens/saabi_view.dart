@@ -164,10 +164,11 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          TopPadding(withHeight: 24),
           Container(
             width: 72,
             height: 72,
@@ -479,5 +480,3 @@ class _SaabiFullScreenViewState extends ConsumerState<_SaabiFullScreenView> {
     );
   }
 }
-
-

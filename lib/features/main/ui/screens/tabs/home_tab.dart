@@ -204,7 +204,7 @@ class _QuickActionsRow extends StatelessWidget {
           child: _ActionTile(
             icon: FLucideIcons.send,
             label: 'Send',
-            onTap: () => showTransactionSheet(context, initialIntent: const SendIntent()),
+            onTap: () => showTransactionSheet(context, initialIntent: SendIntent()),
           ),
         ),
         const SizedBox(width: 12),
@@ -212,7 +212,7 @@ class _QuickActionsRow extends StatelessWidget {
           child: _ActionTile(
             icon: HugeIconsStroke.transaction,
             label: 'Transfer',
-            onTap: () => showTransactionSheet(context, initialIntent: const TransferIntent()),
+            onTap: () => showTransactionSheet(context, initialIntent: TransferIntent()),
           ),
         ),
         const SizedBox(width: 12),

@@ -9,6 +9,7 @@ enum IntentType {
   transactionHistory,
   createRound,
   airtime,
+  verifyReceipt,
   unknown,
 }
 
@@ -90,6 +91,14 @@ class IntentClassifier {
       'topup',
       'buy data',
       'data bundle',
+    ],
+    IntentType.verifyReceipt: [
+      'receipt',
+      'share receipt',
+      'payment proof',
+      'proof of payment',
+      'show receipt',
+      'verify receipt',
     ],
   };
 

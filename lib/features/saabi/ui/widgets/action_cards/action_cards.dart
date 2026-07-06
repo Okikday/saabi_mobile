@@ -5,14 +5,19 @@ import 'package:saabi_mobile/features/saabi/logic/saabi_intent.dart';
 import 'package:saabi_mobile/features/saabi/logic/saabi_intent_handler.dart';
 import 'package:intl/intl.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:saabi_mobile/features/saabi/providers/transaction_status_pod.dart';
+import 'package:saabi_mobile/shared/routes/app_router.dart';
+
 /// Renders a transfer confirmation card.
-class TransferActionCard extends StatelessWidget {
+class TransferActionCard extends ConsumerWidget {
   final TransferIntent intent;
 
   const TransferActionCard({super.key, required this.intent});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final status = ref.watch(transactionStatusProvider)[intent.id] ?? TransactionStatus.pending;
     final currency = NumberFormat.currency(locale: 'en_NG', symbol: '₦');
     return Container(
       padding: const EdgeInsets.all(16),
@@ -65,10 +70,20 @@ class TransferActionCard extends StatelessWidget {
           ],
           SizedBox(
             width: double.infinity,
-            child: FButton(
-              onPress: () => SaabiIntentHandler.execute(context, intent),
-              child: const Text('Review Transfer'),
-            ),
+            child: status == TransactionStatus.successful
+                ? FButton(
+                    onPress: () => Routes.transactionHistory.push(context),
+                    child: const Text('Transfer Successful'),
+                  )
+                : status == TransactionStatus.cancelled
+                    ? FButton(
+                        onPress: null,
+                        child: const Text('Transfer Cancelled'),
+                      )
+                    : FButton(
+                        onPress: () => SaabiIntentHandler.execute(context, intent, ref: ref),
+                        child: const Text('Review Transfer'),
+                      ),
           ),
         ],
       ),
@@ -77,13 +92,14 @@ class TransferActionCard extends StatelessWidget {
 }
 
 /// Renders a send money card.
-class SendActionCard extends StatelessWidget {
+class SendActionCard extends ConsumerWidget {
   final SendIntent intent;
 
   const SendActionCard({super.key, required this.intent});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final status = ref.watch(transactionStatusProvider)[intent.id] ?? TransactionStatus.pending;
     final currency = NumberFormat.currency(locale: 'en_NG', symbol: '₦');
     return Container(
       padding: const EdgeInsets.all(16),
@@ -136,10 +152,20 @@ class SendActionCard extends StatelessWidget {
           ],
           SizedBox(
             width: double.infinity,
-            child: FButton(
-              onPress: () => SaabiIntentHandler.execute(context, intent),
-              child: const Text('Review Details'),
-            ),
+            child: status == TransactionStatus.successful
+                ? FButton(
+                    onPress: () => Routes.transactionHistory.push(context),
+                    child: const Text('Transfer Successful'),
+                  )
+                : status == TransactionStatus.cancelled
+                    ? FButton(
+                        onPress: null,
+                        child: const Text('Transfer Cancelled'),
+                      )
+                    : FButton(
+                        onPress: () => SaabiIntentHandler.execute(context, intent, ref: ref),
+                        child: const Text('Review Details'),
+                      ),
           ),
         ],
       ),

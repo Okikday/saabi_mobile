@@ -9,6 +9,7 @@ class TxnData {
   final String amount;
   final String time;
   final bool isDebit;
+  final String? status;
 
   const TxnData({
     required this.icon,
@@ -18,6 +19,7 @@ class TxnData {
     required this.amount,
     required this.time,
     required this.isDebit,
+    this.status,
   });
 }
 
@@ -69,17 +71,26 @@ class TxnTile extends StatelessWidget {
               Text(
                 data.amount,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: data.isDebit ? const Color(0xFFF44336) : const Color(0xFF4CAF50),
+                  color: data.status == 'Pending' ? const Color(0xFFF57C00) : (data.isDebit ? const Color(0xFFF44336) : const Color(0xFF4CAF50)),
                   fontWeight: FontWeight.w700,
                 ),
               ),
               const SizedBox(height: 2),
-              Text(
-                data.time,
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: context.theme.colors.mutedForeground,
+              if (data.status != null)
+                Text(
+                  data.status!,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: const Color(0xFFF57C00),
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              else
+                Text(
+                  data.time,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: context.theme.colors.mutedForeground,
+                  ),
                 ),
-              ),
             ],
           ),
         ],
