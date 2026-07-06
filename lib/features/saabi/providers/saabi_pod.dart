@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar_community/isar.dart';
 import 'package:saabi_mobile/core/storage/isar/isar_data.dart';
@@ -292,17 +290,34 @@ class SaabiPod extends Notifier<SaabiState> {
       return GenericActionCard(
         intent: intent,
         title: 'Transaction History',
+        subtitle: intent.date != null ? 'On ${intent.date!.toLocal().toString().split(' ')[0]}' : 'Recent transactions',
         buttonText: 'View Transactions',
         icon: HugeIconsStroke.calendar01,
       );
     } else if (intent is AirtimeIntent) {
-      return GenericActionCard(intent: intent, title: 'Buy Airtime', buttonText: 'Continue', icon: Icons.smartphone);
+      final parts = <String>[];
+      if (intent.amount != null) parts.add('₦${intent.amount}');
+      if (intent.phoneNumber != null) parts.add('for ${intent.phoneNumber}');
+      return GenericActionCard(
+        intent: intent,
+        title: 'Buy Airtime',
+        subtitle: parts.isNotEmpty ? parts.join(' ') : null,
+        buttonText: 'Continue',
+        icon: Icons.smartphone,
+      );
     } else if (intent is DataIntent) {
-      return GenericActionCard(intent: intent, title: 'Buy Data', buttonText: 'Continue', icon: HugeIconsStroke.wifi01);
+      return GenericActionCard(
+        intent: intent,
+        title: 'Buy Data',
+        subtitle: intent.phoneNumber != null ? 'For ${intent.phoneNumber}' : null,
+        buttonText: 'Continue',
+        icon: HugeIconsStroke.wifi01,
+      );
     } else if (intent is BillsIntent) {
       return GenericActionCard(
         intent: intent,
         title: 'Pay Bills',
+        subtitle: 'Electricity, Cable TV, Internet',
         buttonText: 'View Bills',
         icon: HugeIconsStroke.invoice01,
       );
@@ -310,6 +325,7 @@ class SaabiPod extends Notifier<SaabiState> {
       return GenericActionCard(
         intent: intent,
         title: 'Investments',
+        subtitle: 'Grow your wealth with Saabi',
         buttonText: 'View Investments',
         icon: HugeIconsStroke.chartHistogram,
       );
@@ -317,6 +333,7 @@ class SaabiPod extends Notifier<SaabiState> {
       return GenericActionCard(
         intent: intent,
         title: 'Request Loan',
+        subtitle: 'Get instant loans at low rates',
         buttonText: 'View Loans',
         icon: HugeIconsStroke.bank,
       );
@@ -324,6 +341,7 @@ class SaabiPod extends Notifier<SaabiState> {
       return GenericActionCard(
         intent: intent,
         title: 'Credit Score',
+        subtitle: 'Check your borrowing power',
         buttonText: 'View Credit Score',
         icon: Icons.speed,
       );

@@ -80,27 +80,25 @@ class _SaabiShellState extends State<SaabiShell> {
       body: Stack(
         children: [
           const _GlowBackdrop(),
-          SafeArea(
-            child: CustomScrollView(
-              slivers: [
-                PinnedHeaderSliver(
-                  child: SaabiNavbar(activePage: _currentPage, onNavigate: _navigateTo),
-                ),
-                SliverToBoxAdapter(
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (notification) {
-                      _onScroll(notification);
-                      return false;
-                    },
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 250),
-                      child: KeyedSubtree(key: ValueKey(_currentPage), child: body),
-                    ),
+          CustomScrollView(
+            slivers: [
+              PinnedHeaderSliver(
+                child: SaabiNavbar(activePage: _currentPage, onNavigate: _navigateTo),
+              ),
+              SliverToBoxAdapter(
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (notification) {
+                    _onScroll(notification);
+                    return false;
+                  },
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 250),
+                    child: KeyedSubtree(key: ValueKey(_currentPage), child: body),
                   ),
                 ),
-                if (_currentPage == SaabiPage.landing) SliverToBoxAdapter(child: const HeroFooter()),
-              ],
-            ),
+              ),
+              if (_currentPage == SaabiPage.landing) SliverToBoxAdapter(child: const HeroFooter()),
+            ],
           ),
           if (_showFloatingWhatsApp) const FloatingWhatsAppButton(),
           if (_showLoginModal)

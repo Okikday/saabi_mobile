@@ -101,11 +101,16 @@ class _CircleHeroCard extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           Row(
+            spacing: 12,
             children: [
-              _HeroStat(label: 'Pot Size', value: '₦500,000'),
-              const SizedBox(width: 32),
-              _HeroStat(label: 'Members', value: '10'),
-              const SizedBox(width: 32),
+              Expanded(
+                child: _HeroStat(label: 'Pot Size', value: '₦500,000'),
+              ),
+
+              Expanded(
+                child: _HeroStat(label: 'Members', value: '10'),
+              ),
+
               _HeroStat(label: 'Your Turn', value: 'Week 8'),
             ],
           ),

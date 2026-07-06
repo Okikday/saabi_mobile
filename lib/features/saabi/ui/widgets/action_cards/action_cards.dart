@@ -52,7 +52,7 @@ class TransferActionCard extends StatelessWidget {
           ],
           if (intent.accountNumber != null) ...[
             Text(
-              'Account Number',
+              'To (Account Number)',
               style: Theme.of(context).textTheme.labelSmall?.copyWith(color: context.theme.colors.mutedForeground),
             ),
             Text(
@@ -123,7 +123,7 @@ class SendActionCard extends StatelessWidget {
           ],
           if (intent.recipient != null) ...[
             Text(
-              'Recipient',
+              'To (Phone/Tag)',
               style: Theme.of(context).textTheme.labelSmall?.copyWith(color: context.theme.colors.mutedForeground),
             ),
             Text(
@@ -242,6 +242,7 @@ class GenericActionCard extends StatelessWidget {
   final String title;
   final String buttonText;
   final IconData icon;
+  final String? subtitle;
 
   const GenericActionCard({
     super.key,
@@ -249,6 +250,7 @@ class GenericActionCard extends StatelessWidget {
     required this.title,
     required this.buttonText,
     required this.icon,
+    this.subtitle,
   });
 
   @override
@@ -267,11 +269,25 @@ class GenericActionCard extends StatelessWidget {
             children: [
               Icon(icon, color: context.theme.colors.primary, size: 20),
               const SizedBox(width: 8),
-              Text(
-                title,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleSmall?.copyWith(color: context.theme.colors.foreground, fontWeight: FontWeight.w600),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleSmall?.copyWith(color: context.theme.colors.foreground, fontWeight: FontWeight.w600),
+                    ),
+                    if (subtitle != null && subtitle!.isNotEmpty) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        subtitle!,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: context.theme.colors.mutedForeground),
+                      ),
+                    ],
+                  ],
+                ),
               ),
             ],
           ),

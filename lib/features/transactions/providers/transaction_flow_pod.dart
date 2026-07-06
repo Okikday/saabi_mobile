@@ -54,12 +54,34 @@ class TransactionFlowPod extends Notifier<TransactionFlowState> {
     return const TransactionFlowState();
   }
 
-  void initialize({required bool isTransfer, String? initialAmount, String? initialRecipient}) {
+  void initialize({
+    required bool isTransfer,
+    String? initialRecipient,
+    String? initialAmount,
+  }) {
     state = state.copyWith(
       isTransfer: isTransfer,
-      amount: initialAmount ?? '',
       recipient: initialRecipient ?? '',
+      amount: initialAmount ?? '',
     );
+  }
+
+  void updateRecipient(String value) {
+    state = state.copyWith(recipient: value);
+    _simulateLookup();
+  }
+
+  void updateAmount(String value) {
+    state = state.copyWith(amount: value);
+  }
+
+  void updateDescription(String value) {
+    state = state.copyWith(description: value);
+  }
+
+  void selectBank(String bank) {
+    state = state.copyWith(selectedBank: bank);
+    _simulateLookup();
   }
 
   void setStep(int step) {
@@ -67,36 +89,20 @@ class TransactionFlowPod extends Notifier<TransactionFlowState> {
   }
 
   void nextStep() {
-    state = state.copyWith(currentStep: state.currentStep + 1);
+    if (state.currentStep < 2) {
+      state = state.copyWith(currentStep: state.currentStep + 1);
+    }
   }
 
-  void previousStep() {
+  void prevStep() {
     if (state.currentStep > 0) {
       state = state.copyWith(currentStep: state.currentStep - 1);
     }
   }
 
-  void updateRecipient(String recipient) {
-    state = state.copyWith(recipient: recipient);
-    _simulateLookup();
-  }
-
-  void updateAmount(String amount) {
-    state = state.copyWith(amount: amount);
-  }
-
-  void updateDescription(String description) {
-    state = state.copyWith(description: description);
-  }
-
-  void selectBank(String bank) {
-    state = state.copyWith(selectedBank: bank, bankMatched: false, matchedAccountName: '');
-    _simulateLookup();
-  }
-
   void _simulateLookup() {
-    if (state.isTransfer && state.recipient.length == 10) {
-      // Simulate API call
+    // Basic validation
+    if (state.recipient.length >= 10 && (!state.isTransfer || state.selectedBank != null)) {
       Future.delayed(const Duration(milliseconds: 600), () {
         // If state changed while waiting, ignore (simplification for mock)
         state = state.copyWith(
@@ -111,6 +117,6 @@ class TransactionFlowPod extends Notifier<TransactionFlowState> {
   }
 }
 
-final transactionFlowProvider = NotifierProvider<TransactionFlowPod, TransactionFlowState>(
+final transactionFlowProvider = NotifierProvider.autoDispose<TransactionFlowPod, TransactionFlowState>(
   TransactionFlowPod.new,
 );

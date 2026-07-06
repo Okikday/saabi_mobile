@@ -17,8 +17,7 @@ class SaabiIntentHandler {
         await showTransactionSheet(context, initialIntent: intent);
         break;
       case CreditScoreIntent():
-        // Could open the credit score route directly
-        // Routes.creditDetail.push(context);
+        Routes.creditDetail.push(context);
         break;
       case CreateRoundIntent():
         // Could trigger create round sheet

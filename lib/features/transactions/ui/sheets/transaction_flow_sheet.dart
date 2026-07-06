@@ -54,6 +54,13 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
           _recipientController.text = intent.recipient ?? '';
           if (intent.amount != null) _amountController.text = intent.amount.toString();
 
+          if ((intent.recipient ?? '').isNotEmpty) {
+            ref.read(transactionFlowProvider.notifier).updateRecipient(intent.recipient!);
+          }
+          if (intent.amount != null) {
+            ref.read(transactionFlowProvider.notifier).updateAmount(intent.amount.toString());
+          }
+
           if ((intent.recipient ?? '').isNotEmpty && (intent.amount ?? 0) > 0) {
             ref.read(transactionFlowProvider.notifier).setStep(1);
           }
@@ -67,6 +74,13 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
               );
           _recipientController.text = intent.accountNumber ?? '';
           if (intent.amount != null) _amountController.text = intent.amount.toString();
+
+          if ((intent.accountNumber ?? '').isNotEmpty) {
+            ref.read(transactionFlowProvider.notifier).updateRecipient(intent.accountNumber!);
+          }
+          if (intent.amount != null) {
+            ref.read(transactionFlowProvider.notifier).updateAmount(intent.amount.toString());
+          }
 
           if ((intent.accountNumber ?? '').isNotEmpty && (intent.amount ?? 0) > 0) {
             ref.read(transactionFlowProvider.notifier).setStep(1);
@@ -93,12 +107,32 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
     }
   }
 
-  void _prevStep() {
+  Future<bool> _onWillPop() async {
+    final bool? confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return FDialog(
+          title: const Text('Cancel Transaction?'),
+          body: const Text('Are you sure you want to cancel this transaction?'),
+          actions: [
+            FButton(variant: .outline, onPress: () => Navigator.of(context).pop(false), child: const Text('No')),
+            FButton(onPress: () => Navigator.of(context).pop(true), child: const Text('Yes, Cancel')),
+          ],
+        );
+      },
+    );
+    return confirm ?? false;
+  }
+
+  void _prevStep() async {
     final state = ref.read(transactionFlowProvider);
     if (state.currentStep > 0) {
-      ref.read(transactionFlowProvider.notifier).previousStep();
+      ref.read(transactionFlowProvider.notifier).prevStep();
     } else {
-      Navigator.of(context).pop();
+      final shouldPop = await _onWillPop();
+      if (shouldPop && mounted) {
+        Navigator.of(context).pop();
+      }
     }
   }
 
@@ -106,9 +140,16 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
   Widget build(BuildContext context) {
     final state = ref.watch(transactionFlowProvider);
 
-    return SafeArea(
-      child: AnimatedPadding(
-        duration: const Duration(milliseconds: 300),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        final shouldPop = await _onWillPop();
+        if (shouldPop && context.mounted) {
+          Navigator.of(context).pop(result);
+        }
+      },
+      child: Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Container(
           decoration: BoxDecoration(
@@ -526,7 +567,6 @@ class _TransactionFlowSheetState extends ConsumerState<TransactionFlowSheet> {
               _buildDetailRow('Fee', _currencyFormat.format(fee)),
               _buildDetailRow('VAT', _currencyFormat.format(vat)),
               const Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Divider(height: 24, thickness: 0.5)),
-
             ],
           ),
         ),

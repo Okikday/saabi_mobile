@@ -4,6 +4,7 @@ import 'package:forui/forui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:saabi_mobile/shared/theme/logic/theme_pod.dart';
+import 'package:saabi_mobile/features/saabi/providers/live_assist_pod.dart' as saabi_live;
 
 class SettingsView extends ConsumerWidget {
   const SettingsView({super.key});
@@ -56,6 +57,38 @@ class SettingsView extends ConsumerWidget {
             icon: HugeIconsStroke.chatQuestion01,
             title: 'Help Center',
             trailing: Icon(Icons.chevron_right_rounded, color: context.theme.colors.mutedForeground),
+          ),
+          const SizedBox(height: 24),
+          _buildSectionHeader(context, 'Experimental Features'),
+          Consumer(
+            builder: (context, ref, _) {
+              final liveState = ref.watch(saabi_live.liveAssistProvider);
+              return Column(
+                children: [
+                  _buildTile(
+                    context,
+                    icon: HugeIconsSolid.mic01,
+                    title: 'Saabi Live Assist',
+                    trailing: FSwitch(
+                      value: liveState.isEnabled,
+                      onChange: (value) => ref.read(saabi_live.liveAssistProvider.notifier).toggleEnabled(value),
+                    ),
+                  ),
+                  if (liveState.isEnabled) ...[
+                    const SizedBox(height: 12),
+                    _buildTile(
+                      context,
+                      icon: HugeIconsStroke.wifiDisconnected01,
+                      title: 'Offline Processing Only',
+                      trailing: FSwitch(
+                        value: liveState.isOfflineOnly,
+                        onChange: (value) => ref.read(saabi_live.liveAssistProvider.notifier).toggleOfflineOnly(value),
+                      ),
+                    ),
+                  ]
+                ],
+              );
+            },
           ),
         ],
       ),

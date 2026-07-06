@@ -4,6 +4,7 @@ import 'package:forui/forui.dart';
 import 'package:saabi_mobile/shared/routes/app_router.dart';
 import 'package:saabi_mobile/shared/theme/app_theme.dart';
 import 'package:saabi_mobile/shared/theme/logic/theme_pod.dart';
+import 'package:saabi_mobile/features/saabi/ui/widgets/live_assist_orb.dart';
 
 /// Root application widget.
 ///
@@ -35,7 +36,7 @@ class _SaabiApp extends ConsumerWidget {
       ),
       builder: (context, child) => FTheme(
         data: isDark ? SaabiTheme.dark : SaabiTheme.light,
-        child: child ?? const SizedBox.shrink(),
+        child: LiveAssistOrbOverlay(child: child ?? const SizedBox.shrink()),
       ),
     );
   }
